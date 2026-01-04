@@ -3,37 +3,23 @@
 <head>
   <title>Testit - Tests</title>
   <style>
-    body { margin: 0; font-family: Arial; background: #0b1020; color: white; }
-    .topbar { background: #1f2937; padding: 15px; display: flex; justify-content: center; gap: 20px; }
-    .topbar a { color: white; text-decoration: none; font-weight: bold; }
-    .topbar a:hover { text-decoration: underline; }
-    .container { padding: 30px; text-align: center; display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; }
+    body { margin:0; font-family: Arial; background:#0b1020; color:white; text-align:center; }
+    .topbar { background:#1f2937; padding:15px; display:flex; justify-content:center; gap:20px; }
+    .topbar a { color:white; text-decoration:none; font-weight:bold; }
+    .topbar a:hover { text-decoration:underline; }
+    .container { padding:30px; display:flex; flex-wrap:wrap; justify-content:center; gap:20px; }
 
-    .char-card {
-      width: 160px;
-      padding: 15px;
-      border-radius: 12px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-between;
-      font-weight: bold;
-      transition: transform 0.2s, box-shadow 0.2s;
-      cursor: pointer;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-      position: relative;
-    }
+    .char-card { width:160px; padding:15px; border-radius:12px; display:flex; flex-direction:column; align-items:center; justify-content:space-between; font-weight:bold; transition:transform 0.2s, box-shadow 0.2s; cursor:pointer; box-shadow:0 4px 10px rgba(0,0,0,0.5); position:relative; }
+    .char-card:hover { transform:scale(1.05); box-shadow:0 8px 20px rgba(0,0,0,0.7); }
 
-    .char-card:hover { transform: scale(1.05); box-shadow: 0 8px 20px rgba(0,0,0,0.7); }
+    .common { background-color:#4b5563; color:white; border:2px solid #374151; }
+    .rare { background-color:#1e40af; color:white; border:2px solid #3b82f6; }
+    .chroma { background-color:#800080; color:white; border:2px solid #d946ef; }
 
-    .common { background-color: #4b5563; color: white; border: 2px solid #374151; }
-    .rare { background-color: #1e40af; color: white; border: 2px solid #3b82f6; }
-    .legendary { background-color: #facc15; color: black; border: 2px solid #fde68a; }
-
-    .char-card img { width: 80px; border-radius: 8px; margin-bottom: 8px; }
-    .count { margin-top: 5px; font-size: 14px; }
-    .sellButton { background-color: #dc2626; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 5px; margin-top: 8px; }
-    .sellButton:hover { background-color: #b91c1c; }
+    .char-card img { width:80px; border-radius:8px; margin-bottom:8px; }
+    .count { margin-top:5px; font-size:14px; }
+    .sellButton { background-color:#dc2626; color:white; border:none; padding:5px 10px; cursor:pointer; border-radius:5px; margin-top:8px; }
+    .sellButton:hover { background-color:#b91c1c; }
   </style>
 </head>
 <body>
@@ -59,30 +45,26 @@
   if(Object.keys(characters).length === 0){
     container.innerHTML = "<p>No characters yet. Buy packs to collect them!</p>";
   } else {
-    for(let name in characters){
-      const char = characters[name];
+    for(let id in characters){
+      const char = characters[id];
 
       const card = document.createElement("div");
       card.className = `char-card ${char.rarity}`;
-
       card.innerHTML = `
-        <img src="${char.img}" alt="${name}" />
-        <div>${name}</div>
+        <img src="${char.img}" alt="${char.name}" />
+        <div>${char.name}</div>
         <div class="count">x${char.count}</div>
         <button class="sellButton">Sell</button>
       `;
-
-      // Sell button
       card.querySelector(".sellButton").onclick = function(e){
         e.stopPropagation();
         coins += 10;
         char.count -= 1;
-        if(char.count <= 0) delete characters[name];
+        if(char.count <= 0) delete characters[id];
         localStorage.setItem("characters", JSON.stringify(characters));
         localStorage.setItem("coins", coins);
         location.reload();
       };
-
       container.appendChild(card);
     }
   }
