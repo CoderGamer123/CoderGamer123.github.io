@@ -1,7 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Testit - Tests</title>
+  <style>
+    body { margin: 0; font-family: Arial; background: #0b1020; color: white; }
+    .topbar { background: #1f2937; padding: 15px; display: flex; justify-content: center; gap: 20px; }
+    .topbar a { color: white; text-decoration: none; font-weight: bold; }
+    .topbar a:hover { text-decoration: underline; }
+    .container { padding: 30px; text-align: center; }
+    .char { background-color: #1f2937; padding: 10px; margin: 8px auto; width: 250px; border-radius: 10px; }
+    .common { background-color: gray; }
+    .rare { background-color: blue; }
+    .legendary { background-color: gold; color: black; }
+  </style>
+</head>
+<body>
+
 <div class="topbar">
-  <a href="stats.html">Stats</a> |
-  <a href="tests.html">Tests</a> |
-  <a href="shop.html">Shop</a> |
-  <a href="announcements.html">Announcements</a> |
+  <a href="index.html">Home</a>
+  <a href="stats.html">Stats</a>
+  <a href="tests.html">Tests</a>
+  <a href="shop.html">Shop</a>
+  <a href="announcements.html">Announcements</a>
   <a href="admin.html">Admin</a>
 </div>
+
+<div class="container">
+  <h1>🧪 Your Collection</h1>
+  <div id="characters">No characters yet. Buy packs to collect them!</div>
+</div>
+
+<script>
+  // Example placeholder characters
+  let characters = [
+    {name:"Blocky", rarity:"common"},
+    {name:"Frosto", rarity:"rare"},
+    {name:"Shadowbit", rarity:"legendary"}
+  ];
+
+  const div = document.getElementById("characters");
+  div.innerHTML = "";
+  characters.forEach(char => {
+    let cls = char.rarity;
+    div.innerHTML += `<div class="char ${cls}">${char.name} (${char.rarity})</div>`;
+  });
+</script>
+
+</body>
+</html>
