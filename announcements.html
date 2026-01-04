@@ -3,12 +3,15 @@
 <head>
   <title>Testit - Announcements</title>
   <style>
-    body { margin: 0; font-family: Arial; background: #0b1020; color: white; }
-    .topbar { background: #1f2937; padding: 15px; display: flex; justify-content: center; gap: 20px; }
-    .topbar a { color: white; text-decoration: none; font-weight: bold; }
-    .topbar a:hover { text-decoration: underline; }
-    .container { padding: 50px; text-align: center; }
-    .announcement { background: #111827; padding: 20px; margin: 15px auto; width: 300px; border-radius: 10px; }
+    body { margin:0; font-family: Arial; background:#0b1020; color:white; text-align:center; }
+    .topbar { background:#1f2937; padding:15px; display:flex; justify-content:center; gap:20px; }
+    .topbar a { color:white; text-decoration:none; font-weight:bold; }
+    .topbar a:hover { text-decoration:underline; }
+
+    .container { padding:30px; }
+    h1 { margin-bottom:20px; }
+
+    .announcement { background:#1f2937; padding:15px; margin:10px auto; width:80%; border-radius:12px; box-shadow:0 4px 10px rgba(0,0,0,0.5); }
   </style>
 </head>
 <body>
@@ -24,8 +27,26 @@
 
 <div class="container">
   <h1>📢 Announcements</h1>
-  <div class="announcement">Welcome to Testit! This is a placeholder announcement.</div>
+  <div id="announcements"></div>
 </div>
+
+<script>
+  // Load announcements from localStorage or set default
+  let announcements = JSON.parse(localStorage.getItem("announcements")) || [
+    "Welcome to Testit! Open packs to collect characters!",
+    "Rare and Chroma characters are extra special!"
+  ];
+
+  const container = document.getElementById("announcements");
+  container.innerHTML = "";
+
+  announcements.forEach(msg => {
+    const div = document.createElement("div");
+    div.className = "announcement";
+    div.innerText = msg;
+    container.appendChild(div);
+  });
+</script>
 
 </body>
 </html>
