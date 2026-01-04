@@ -1,1 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Testit - Leaderboard</title>
+  <style>
+    body { margin:0; font-family: Arial; background:#0b1020; color:white; text-align:center; }
+    .topbar { background:#1f2937; padding:15px; display:flex; justify-content:center; gap:20px; }
+    .topbar a { color:white; text-decoration:none; font-weight:bold; }
+    .topbar a:hover { text-decoration:underline; }
+    .container { padding:30px; max-width:600px; margin:auto; }
+    table { width:100%; border-collapse:collapse; margin-top:20px; }
+    th, td { border:1px solid #4b5563; padding:8px; }
+    th { background:#1e40af; }
+    td { background:#1f2937; }
+  </style>
+</head>
+<body>
+<div class="topbar">
+  <a href="index.html">Home</a>
+  <a href="stats.html">Stats</a>
+  <a href="tests.html">Tests</a>
+  <a href="shop.html">Shop</a>
+  <a href="announcements.html">Announcements</a>
+  <a href="leaderboard.html">Leaderboard</a>
+  <a href="admin.html">Admin</a>
+</div>
+
+<div class="container">
+  <h1>🏆 Leaderboard</h1>
+  <table>
+    <tr>
+      <th>Rank</th>
+      <th>Name</th>
+      <th>Coins</th>
+      <th>Total Characters</th>
+    </tr>
+    <tbody id="leaderboardBody"></tbody>
+  </table>
+</div>
+
+<script>
+  // For now, leaderboard uses localStorage "players" array
+  // Each player: {name: "Player1", coins: 100, charactersCount: 10}
+  let players = JSON.parse(localStorage.getItem("players")) || [];
+
+  // Add current player as "You"
+  let coins = parseInt(localStorage.getItem("coins")) || 100;
+  let characters = JSON.parse(localStorage.getItem("characters")) || {};
+  let totalChars = 0;
+  for(let id in characters) totalChars += characters[id].count;
+
+  let found = players.find(p => p.name === "You");
+  if(!found) players.push({name:"You", coins:coins, charactersCount: totalChars});
+  else {
+    found.coins = coins;
+    found.charactersCount = totalChars;
+  }
+
+  // Sort by coins, then charactersCount
+  players.sort((a,b) => b.coins - a.coins || b.charactersCount - a.charactersCount);
+
+  const tbody = document.getElementById("leaderboardBody");
+  tbody.innerHTML = "";
+
+  players.forEach((p,i)=>{
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td>${i+1}</td><td>${p.name}</td><td>${p.coins}</td><td>${p.charactersCount}</td>`;
+    tbody.appendChild(tr);
+  });
+
+  // Save updated leaderboard
+  localStorage.setItem("players", JSON.stringify(players));
+</script>
+</body>
+</html>
 
