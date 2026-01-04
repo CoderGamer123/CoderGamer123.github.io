@@ -7,14 +7,33 @@
     .topbar { background: #1f2937; padding: 15px; display: flex; justify-content: center; gap: 20px; }
     .topbar a { color: white; text-decoration: none; font-weight: bold; }
     .topbar a:hover { text-decoration: underline; }
-    .container { padding: 30px; text-align: center; }
-    .char { padding: 10px; margin: 8px auto; width: 300px; border-radius: 10px; display: flex; align-items: center; gap: 10px; justify-content: space-between; }
-    .common { background-color: gray; }
-    .rare { background-color: blue; }
-    .legendary { background-color: gold; color: black; }
-    .char img { width: 50px; border-radius: 5px; }
-    .sellButton { background-color: red; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 5px; }
-    .sellButton:hover { background-color: darkred; }
+    .container { padding: 30px; text-align: center; display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; }
+
+    .char-card {
+      width: 160px;
+      padding: 15px;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: bold;
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+      position: relative;
+    }
+
+    .char-card:hover { transform: scale(1.05); box-shadow: 0 8px 20px rgba(0,0,0,0.7); }
+
+    .common { background-color: #4b5563; color: white; border: 2px solid #374151; }
+    .rare { background-color: #1e40af; color: white; border: 2px solid #3b82f6; }
+    .legendary { background-color: #facc15; color: black; border: 2px solid #fde68a; }
+
+    .char-card img { width: 80px; border-radius: 8px; margin-bottom: 8px; }
+    .count { margin-top: 5px; font-size: 14px; }
+    .sellButton { background-color: #dc2626; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 5px; margin-top: 8px; }
+    .sellButton:hover { background-color: #b91c1c; }
   </style>
 </head>
 <body>
@@ -28,43 +47,43 @@
   <a href="admin.html">Admin</a>
 </div>
 
-<div class="container">
-  <h1>🧪 Your Collection</h1>
-  <div id="characters"></div>
-</div>
+<div class="container" id="characters"></div>
 
 <script>
   let characters = JSON.parse(localStorage.getItem("characters")) || {};
   let coins = parseInt(localStorage.getItem("coins")) || 100;
 
-  const div = document.getElementById("characters");
-  div.innerHTML = "";
+  const container = document.getElementById("characters");
+  container.innerHTML = "";
 
   if(Object.keys(characters).length === 0){
-    div.innerHTML = "No characters yet. Buy packs to collect them!";
+    container.innerHTML = "<p>No characters yet. Buy packs to collect them!</p>";
   } else {
     for(let name in characters){
       const char = characters[name];
-      div.innerHTML += `
-        <div class="char ${char.rarity}">
-          <div style="display:flex; align-items:center; gap:10px;">
-            <img src="${char.img}" alt="${name}"/>
-            <span>${name} x${char.count}</span>
-          </div>
-          <button class="sellButton" onclick="sellChar('${name}')">Sell</button>
-        </div>
-      `;
-    }
-  }
 
-  function sellChar(name){
-    if(characters[name]){
-      coins += 10; // sell price fixed at 10 coins
-      characters[name].count -= 1;
-      if(characters[name].count <= 0) delete characters[name];
-      localStorage.setItem("characters", JSON.stringify(characters));
-      localStorage.setItem("coins", coins);
-      location.reload(); // refresh page to update display
+      const card = document.createElement("div");
+      card.className = `char-card ${char.rarity}`;
+
+      card.innerHTML = `
+        <img src="${char.img}" alt="${name}" />
+        <div>${name}</div>
+        <div class="count">x${char.count}</div>
+        <button class="sellButton">Sell</button>
+      `;
+
+      // Sell button
+      card.querySelector(".sellButton").onclick = function(e){
+        e.stopPropagation();
+        coins += 10;
+        char.count -= 1;
+        if(char.count <= 0) delete characters[name];
+        localStorage.setItem("characters", JSON.stringify(characters));
+        localStorage.setItem("coins", coins);
+        location.reload();
+      };
+
+      container.appendChild(card);
     }
   }
 </script>
