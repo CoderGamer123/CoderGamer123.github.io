@@ -30,6 +30,7 @@
     }
 
     #coinsDisplay { font-size:22px; margin-top:20px; }
+    #lastPackResult { margin-top:20px; font-size:18px; }
   </style>
 </head>
 <body>
@@ -62,30 +63,38 @@
 </div>
 
 <script>
+  // --- Load saved data ---
   let coins = parseInt(localStorage.getItem("coins")) || 100;
   let characters = JSON.parse(localStorage.getItem("characters")) || {};
+  let packsOpened = parseInt(localStorage.getItem("packsOpened")) || 0;
 
   document.getElementById("coinsDisplay").innerText = "Coins: " + coins;
 
+  // --- Characters with rarity tiers (Chromas included) ---
   const possibleCharacters = [
     {name:"Blocky", rarity:"common", img:"https://via.placeholder.com/100/888888?text=Blocky"},
     {name:"Zapster", rarity:"common", img:"https://via.placeholder.com/100/888888?text=Zapster"},
     {name:"Frosto", rarity:"rare", img:"https://via.placeholder.com/100/0000FF?text=Frosto"},
-    {name:"Shadowbit", rarity:"chroma", img:"https://via.placeholder.com/100/800080?text=Shadowbit"} // chroma rarity
+    {name:"Shadowbit", rarity:"chroma", img:"https://via.placeholder.com/100/800080?text=Shadowbit"}
   ];
 
   function buyPack(cost){
     if(coins < cost){ alert("Not enough coins!"); return; }
 
+    // Deduct coins and save
     coins -= cost;
     localStorage.setItem("coins", coins);
     document.getElementById("coinsDisplay").innerText = "Coins: " + coins;
+
+    // Increment packs opened
+    packsOpened += 1;
+    localStorage.setItem("packsOpened", packsOpened);
 
     const packDiv = document.getElementById("packAnimation");
     packDiv.innerText = "📦";
     packDiv.style.animation = "shake 1s";
 
-    // --- Pick random character with probabilities ---
+    // --- Pick random character ---
     let roll = Math.random();
     let chosen;
     if(roll < 0.5) chosen = possibleCharacters[0];        // common 50%
@@ -94,9 +103,9 @@
 
     setTimeout(()=>{
       packDiv.style.animation = "none";
-
-      // show glitter if rare or chroma
       packDiv.innerHTML = "";
+
+      // show glitter for rare/chroma
       if(chosen.rarity === "rare" || chosen.rarity === "chroma"){
         for(let i=0;i<20;i++){
           const g = document.createElement("div");
@@ -107,7 +116,7 @@
         }
       }
 
-      // add to collection
+      // Add to collection
       const id = chosen.name + "_" + chosen.rarity;
       if(characters[id]){
         characters[id].count += 1;
@@ -116,6 +125,7 @@
       }
       localStorage.setItem("characters", JSON.stringify(characters));
 
+      // Show animation result
       packDiv.innerHTML += `<img src="${chosen.img}" width="100" alt="${chosen.name}"/>`;
       document.getElementById("lastPackResult").innerHTML = `<h3>You got ${chosen.name} (${chosen.rarity})!</h3>`;
     },1000);
@@ -124,5 +134,4 @@
 
 </body>
 </html>
-
 
