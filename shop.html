@@ -8,10 +8,20 @@
     .topbar a { color: white; text-decoration: none; font-weight: bold; }
     .topbar a:hover { text-decoration: underline; }
     .container { padding: 30px; text-align: center; }
+    
     .pack { background-color: #2563eb; width: 220px; margin: 30px auto; padding: 20px; border-radius: 16px; cursor: pointer; box-shadow: 0 8px 20px rgba(0,0,0,0.4); transition: transform 0.2s; }
     .pack:hover { transform: scale(1.05); background-color: #1d4ed8; }
-    .pack h2 { margin: 0; }
-    .pack p { margin-top: 10px; font-size: 16px; }
+
+    #packAnimation { margin: 30px auto; width: 150px; height: 150px; border: 2px solid white; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 24px; animation: none; }
+
+    @keyframes shake {
+      0% { transform: rotate(0deg); }
+      25% { transform: rotate(10deg); }
+      50% { transform: rotate(-10deg); }
+      75% { transform: rotate(10deg); }
+      100% { transform: rotate(0deg); }
+    }
+
     #coinsDisplay { font-size: 22px; margin-top: 20px; }
   </style>
 </head>
@@ -30,21 +40,21 @@
   <h1>🎁 Shop</h1>
   <div id="coinsDisplay">Coins: 0</div>
 
-  <div class="pack" onclick="buyPack(30)">
+  <div class="pack" onclick="buyPack(30)"> <!-- Starter Pack -->
     <h2>Starter Pack</h2>
     <p>Cost: 30 Coins</p>
   </div>
 
-  <div class="pack" onclick="buyPack(50)">
+  <div class="pack" onclick="buyPack(50)"> <!-- Rare Pack -->
     <h2>Rare Pack</h2>
     <p>Cost: 50 Coins</p>
   </div>
 
+  <div id="packAnimation">📦</div>
   <div id="lastPackResult"></div>
 </div>
 
 <script>
-  // Load coins and characters from localStorage
   let coins = parseInt(localStorage.getItem("coins")) || 100;
   let characters = JSON.parse(localStorage.getItem("characters")) || [];
 
@@ -64,22 +74,32 @@
     localStorage.setItem("coins", coins);
     document.getElementById("coinsDisplay").innerText = "Coins: " + coins;
 
-    // Random character drop
-    let roll = Math.random();
-    let chosen;
-    if(roll < 0.5) chosen = possibleCharacters[0];
-    else if(roll < 0.85) chosen = possibleCharacters[2];
-    else chosen = possibleCharacters[3];
+    // Start pack animation
+    const packDiv = document.getElementById("packAnimation");
+    packDiv.innerText = "📦";
+    packDiv.style.animation = "shake 1s";
 
-    characters.push(chosen);
-    localStorage.setItem("characters", JSON.stringify(characters));
+    // Wait for animation to finish
+    setTimeout(() => {
+      packDiv.style.animation = "none";
 
-    // Show pack result with image
-    document.getElementById("lastPackResult").innerHTML =
-      `<h3>You got ${chosen.name} (${chosen.rarity})!</h3>` +
-      `<img src="${chosen.img}" alt="${chosen.name}" width="100" />`;
+      // Random character drop
+      let roll = Math.random();
+      let chosen;
+      if(roll < 0.5) chosen = possibleCharacters[0];
+      else if(roll < 0.85) chosen = possibleCharacters[2];
+      else chosen = possibleCharacters[3];
+
+      characters.push(chosen);
+      localStorage.setItem("characters", JSON.stringify(characters));
+
+      // Show character in animation div
+      packDiv.innerHTML = `<img src="${chosen.img}" width="100" alt="${chosen.name}"/>`;
+      document.getElementById("lastPackResult").innerHTML = `<h3>You got ${chosen.name} (${chosen.rarity})!</h3>`;
+    }, 1000); // 1 second shake
   }
 </script>
 
 </body>
 </html>
+
