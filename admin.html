@@ -1,17 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Testit - Admin Panel</title>
+  <title>Testit - Admin</title>
   <style>
-    body { margin: 0; font-family: Arial; background: #0b1020; color: white; text-align: center; }
-    .topbar { background: #1f2937; padding: 15px; display: flex; justify-content: center; gap: 20px; }
-    .topbar a { color: white; text-decoration: none; font-weight: bold; }
-    .topbar a:hover { text-decoration: underline; }
+    body { margin:0; font-family: Arial; background:#0b1020; color:white; text-align:center; }
+    .topbar { background:#1f2937; padding:15px; display:flex; justify-content:center; gap:20px; }
+    .topbar a { color:white; text-decoration:none; font-weight:bold; }
+    .topbar a:hover { text-decoration:underline; }
 
-    .container { margin-top: 40px; }
-    input, button { padding: 10px; margin: 10px; border-radius: 5px; border: none; font-size: 16px; }
-    button { cursor: pointer; background-color: #2563eb; color: white; }
-    button:hover { background-color: #1d4ed8; }
+    .container { padding:30px; max-width:600px; margin:auto; text-align:left; }
+
+    input, button { padding:8px 12px; margin:5px 0; border-radius:6px; border:none; font-size:16px; }
+    input[type="text"], input[type="number"], input[type="password"] { width:100%; }
+    button { cursor:pointer; background:#2563eb; color:white; }
+    button:hover { background:#1d4ed8; }
+    .danger { background:#dc2626; }
+    .danger:hover { background:#b91c1c; }
+
+    h1, h2 { text-align:center; }
+    .section { margin-bottom:30px; padding:15px; border-radius:12px; background:#1f2937; }
   </style>
 </head>
 <body>
@@ -26,94 +33,128 @@
 </div>
 
 <div class="container">
-  <h1>🔒 Admin Panel</h1>
+  <h1>🛠️ Admin Panel</h1>
 
-  <div id="loginDiv">
-    <input type="password" id="adminPassword" placeholder="Enter Admin Password">
+  <!-- Password check -->
+  <div id="loginSection" class="section">
+    <h2>Enter Admin Password</h2>
+    <input type="password" id="adminPass" placeholder="Password">
     <button onclick="checkPassword()">Login</button>
+    <div id="loginMessage"></div>
   </div>
 
-  <div id="panel" style="display:none;">
-    <h2>Welcome Admin!</h2>
-    
-    <div>
-      <input type="number" id="addCoins" placeholder="Coins to add">
-      <button onclick="giveCoins()">Give Coins</button>
-    </div>
+  <!-- Admin actions -->
+  <div id="adminActions" class="section" style="display:none;">
 
-    <div>
-      <input type="text" id="charName" placeholder="Character Name">
-      <select id="charRarity">
-        <option value="common">Common</option>
-        <option value="rare">Rare</option>
-        <option value="legendary">Legendary</option>
-      </select>
-      <input type="text" id="charChroma" placeholder="Chroma (optional)">
-      <button onclick="giveChar()">Give Character</button>
-    </div>
+    <!-- Add Announcement -->
+    <h2>Announcements</h2>
+    <input type="text" id="newAnnouncement" placeholder="Type announcement here">
+    <button onclick="addAnnouncement()">Add Announcement</button>
+    <button class="danger" onclick="clearAnnouncements()">Clear All Announcements</button>
 
-    <div>
-      <h3>Current Coins: <span id="coinsDisplay"></span></h3>
-      <h3>Collection:</h3>
-      <div id="collection"></div>
-    </div>
+    <hr>
+
+    <!-- Give Coins / Packs -->
+    <h2>Player Resources</h2>
+    <input type="number" id="coinAmount" placeholder="Coins to give">
+    <button onclick="giveCoins()">Give Coins</button>
+    <br>
+    <input type="number" id="packAmount" placeholder="Packs to give (Starter Pack)">
+    <button onclick="givePacks()">Give Packs</button>
+
+    <hr>
+
+    <!-- Reset Collections -->
+    <h2>Reset Player Collections</h2>
+    <button class="danger" onclick="resetCollection()">Reset All Characters</button>
   </div>
 </div>
 
 <script>
-  const ADMIN_PASSWORD = "testit123"; // set your admin password here
-
-  let coins = parseInt(localStorage.getItem("coins")) || 100;
-  let characters = JSON.parse(localStorage.getItem("characters")) || {};
+  const PASSWORD = "testitadmin"; // change this to your secret password
 
   function checkPassword(){
-    const pw = document.getElementById("adminPassword").value;
-    if(pw === ADMIN_PASSWORD){
-      document.getElementById("loginDiv").style.display = "none";
-      document.getElementById("panel").style.display = "block";
-      updateDisplay();
+    const input = document.getElementById("adminPass").value;
+    if(input === PASSWORD){
+      document.getElementById("loginSection").style.display = "none";
+      document.getElementById("adminActions").style.display = "block";
     } else {
-      alert("Incorrect password!");
+      document.getElementById("loginMessage").innerText = "❌ Wrong password!";
     }
   }
 
-  function updateDisplay(){
-    document.getElementById("coinsDisplay").innerText = coins;
-    const colDiv = document.getElementById("collection");
-    colDiv.innerHTML = "";
-    if(Object.keys(characters).length === 0){
-      colDiv.innerHTML = "No characters yet.";
-    } else {
-      for(let id in characters){
-        const c = characters[id];
-        colDiv.innerHTML += `<div>${c.name}${c.chroma ? " ("+c.chroma+")":""} x${c.count} [${c.rarity}]</div>`;
+  // --- Announcements ---
+  function addAnnouncement(){
+    const msg = document.getElementById("newAnnouncement").value.trim();
+    if(msg === "") return alert("Type something!");
+    let announcements = JSON.parse(localStorage.getItem("announcements")) || [];
+    announcements.push(msg);
+    localStorage.setItem("announcements", JSON.stringify(announcements));
+    alert("✅ Announcement added!");
+    document.getElementById("newAnnouncement").value = "";
+  }
+
+  function clearAnnouncements(){
+    if(confirm("Are you sure you want to clear all announcements?")){
+      localStorage.setItem("announcements", JSON.stringify([]));
+      alert("✅ All announcements cleared!");
+    }
+  }
+
+  // --- Coins ---
+  function giveCoins(){
+    let amount = parseInt(document.getElementById("coinAmount").value);
+    if(isNaN(amount) || amount <= 0) return alert("Enter a valid number");
+    let coins = parseInt(localStorage.getItem("coins")) || 100;
+    coins += amount;
+    localStorage.setItem("coins", coins);
+    alert(`✅ Gave ${amount} coins!`);
+    document.getElementById("coinAmount").value = "";
+  }
+
+  // --- Give Packs (adds random characters directly) ---
+  function givePacks(){
+    let amount = parseInt(document.getElementById("packAmount").value);
+    if(isNaN(amount) || amount <= 0) return alert("Enter a valid number");
+
+    let characters = JSON.parse(localStorage.getItem("characters")) || {};
+    let packsOpened = parseInt(localStorage.getItem("packsOpened")) || 0;
+
+    const possibleCharacters = [
+      {name:"Blocky", rarity:"common", img:"https://via.placeholder.com/100/888888?text=Blocky"},
+      {name:"Zapster", rarity:"common", img:"https://via.placeholder.com/100/888888?text=Zapster"},
+      {name:"Frosto", rarity:"rare", img:"https://via.placeholder.com/100/0000FF?text=Frosto"},
+      {name:"Shadowbit", rarity:"chroma", img:"https://via.placeholder.com/100/800080?text=Shadowbit"}
+    ];
+
+    for(let i=0;i<amount;i++){
+      packsOpened += 1;
+      let roll = Math.random();
+      let chosen;
+      if(roll < 0.5) chosen = possibleCharacters[0];
+      else if(roll < 0.85) chosen = possibleCharacters[2];
+      else chosen = possibleCharacters[3];
+
+      const id = chosen.name + "_" + chosen.rarity;
+      if(characters[id]){
+        characters[id].count += 1;
+      } else {
+        characters[id] = {count:1, rarity:chosen.rarity, img:chosen.img, name:chosen.name};
       }
     }
-  }
 
-  function giveCoins(){
-    const amt = parseInt(document.getElementById("addCoins").value);
-    if(!isNaN(amt)){
-      coins += amt;
-      localStorage.setItem("coins", coins);
-      updateDisplay();
-    }
-  }
-
-  function giveChar(){
-    const name = document.getElementById("charName").value.trim();
-    const rarity = document.getElementById("charRarity").value;
-    const chroma = document.getElementById("charChroma").value.trim();
-    if(name === "") return alert("Enter character name");
-
-    const id = name + (chroma ? "_"+chroma : "");
-    if(characters[id]){
-      characters[id].count += 1;
-    } else {
-      characters[id] = {count:1, rarity:rarity, img:"https://via.placeholder.com/100?text="+name, name:name, chroma:chroma || ""};
-    }
     localStorage.setItem("characters", JSON.stringify(characters));
-    updateDisplay();
+    localStorage.setItem("packsOpened", packsOpened);
+    alert(`✅ Added ${amount} packs to player!`);
+    document.getElementById("packAmount").value = "";
+  }
+
+  // --- Reset Characters ---
+  function resetCollection(){
+    if(confirm("Are you sure you want to reset all characters? This cannot be undone!")){
+      localStorage.setItem("characters", JSON.stringify({}));
+      alert("✅ All characters reset!");
+    }
   }
 </script>
 
