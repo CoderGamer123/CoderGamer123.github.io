@@ -1,83 +1,73 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Pack Opening Game</title>
+  <title>Testit</title>
+
   <style>
     body {
+      margin: 0;
       font-family: Arial, sans-serif;
-      background-color: #111;
+      background-color: #0b1020;
       color: white;
+    }
+
+    /* Top bar */
+    .topbar {
+      background-color: #1f2937;
+      padding: 15px;
+      font-size: 24px;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .coins {
+      background-color: #111827;
+      padding: 8px 15px;
+      border-radius: 10px;
+      font-size: 18px;
+    }
+
+    /* Main content */
+    .container {
+      padding: 30px;
       text-align: center;
     }
 
-    button {
-      padding: 12px 24px;
-      font-size: 18px;
-      margin: 10px;
+    .pack {
+      background-color: #2563eb;
+      width: 220px;
+      margin: 30px auto;
+      padding: 20px;
+      border-radius: 16px;
       cursor: pointer;
-      border: none;
-      border-radius: 8px;
-      background-color: #28a745;
-      color: white;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+      transition: transform 0.2s;
     }
 
-    #characters {
-      margin-top: 20px;
-    }
-  </style>
-</head>
-<body>
-
-  <h1>Pack Opening Game</h1>
-  <p>You start with <span id="coins">100</span> coins.</p>
-
-  <button onclick="buyPack()">Buy Pack (30 coins)</button>
-
-  <h2>Your Characters:</h2>
-  <div id="characters"></div>
-
-  <script>
-    let coins = 100;
-    let characters = [];
-
-    // Possible characters you can get from packs
-    const possibleCharacters = [
-      "Red Warrior",
-      "Blue Mage",
-      "Green Archer",
-      "Golden Knight",
-      "Silver Thief"
-    ];
-
-    function updateCoins() {
-      document.getElementById("coins").innerText = coins;
+    .pack:hover {
+      transform: scale(1.05);
+      background-color: #1d4ed8;
     }
 
-    function showCharacters() {
-      const div = document.getElementById("characters");
-      div.innerHTML = "";
-      characters.forEach((char, index) => {
-        div.innerHTML += `<p>${index + 1}. ${char}</p>`;
-      });
+    .pack h2 {
+      margin: 0;
     }
 
-    function buyPack() {
-      if (coins < 30) {
-        alert("Not enough coins!");
-        return;
-      }
-      coins -= 30;
-      updateCoins();
-
-      // Get random character
-      const randomIndex = Math.floor(Math.random() * possibleCharacters.length);
-      const newChar = possibleCharacters[randomIndex];
-      characters.push(newChar);
-
-      alert("You got: " + newChar + "!");
-      showCharacters();
+    .pack p {
+      margin-top: 10px;
+      font-size: 16px;
     }
-  </script>
 
-</body>
-</html>
+    /* Collection */
+    .collection {
+      margin-top: 40px;
+      background-color: #111827;
+      padding: 20px;
+      border-radius: 15px;
+    }
+
+    .char {
+      background-color: #1f2937;
+      padding: 10px;
