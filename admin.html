@@ -1,7 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Testit - Admin</title>
+  <style>
+    body { margin: 0; font-family: Arial; background: #0b1020; color: white; text-align: center; padding: 50px; }
+    .topbar { background: #1f2937; padding: 15px; display: flex; justify-content: center; gap: 20px; }
+    .topbar a { color: white; text-decoration: none; font-weight: bold; }
+    .topbar a:hover { text-decoration: underline; }
+    input, button { padding: 10px; font-size: 16px; margin: 10px; }
+  </style>
+</head>
+<body>
+
 <div class="topbar">
-  <a href="stats.html">Stats</a> |
-  <a href="tests.html">Tests</a> |
-  <a href="shop.html">Shop</a> |
-  <a href="announcements.html">Announcements</a> |
+  <a href="index.html">Home</a>
+  <a href="stats.html">Stats</a>
+  <a href="tests.html">Tests</a>
+  <a href="shop.html">Shop</a>
+  <a href="announcements.html">Announcements</a>
   <a href="admin.html">Admin</a>
 </div>
+
+<h1>🔒 Admin Login</h1>
+<p>Enter the password to access admin commands:</p>
+<input type="password" id="adminPass" placeholder="Password">
+<button onclick="checkPass()">Login</button>
+
+<script>
+  const PASSWORD = "1234"; // Change this later
+  function checkPass() {
+    let p = document.getElementById("adminPass").value;
+    if(p === PASSWORD) {
+      alert("Access granted! Admin commands coming soon.");
+    } else {
+      alert("Wrong password!");
+    }
+  }
+</script>
+
+</body>
+</html>
