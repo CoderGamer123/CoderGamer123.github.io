@@ -3,12 +3,19 @@
 <head>
   <title>Testit - Stats</title>
   <style>
-    body { margin: 0; font-family: Arial; background: #0b1020; color: white; }
-    .topbar { background: #1f2937; padding: 15px; display: flex; justify-content: center; gap: 20px; }
-    .topbar a { color: white; text-decoration: none; font-weight: bold; }
-    .topbar a:hover { text-decoration: underline; }
-    .container { padding: 50px; text-align: center; }
-    .stat { background: #111827; padding: 20px; margin: 15px auto; width: 250px; border-radius: 10px; }
+    body { margin:0; font-family: Arial; background:#0b1020; color:white; text-align:center; }
+    .topbar { background:#1f2937; padding:15px; display:flex; justify-content:center; gap:20px; }
+    .topbar a { color:white; text-decoration:none; font-weight:bold; }
+    .topbar a:hover { text-decoration:underline; }
+
+    .container { padding:30px; }
+    h1 { margin-bottom:20px; }
+    .stat { margin:10px 0; font-size:20px; }
+    .rarity { display:flex; justify-content:center; gap:30px; margin-top:20px; }
+    .rarity div { padding:10px 15px; border-radius:8px; font-weight:bold; }
+    .common { background:#4b5563; }
+    .rare { background:#1e40af; }
+    .chroma { background:#800080; }
   </style>
 </head>
 <body>
@@ -23,17 +30,40 @@
 </div>
 
 <div class="container">
-  <h1>🪙 Stats</h1>
-  <div class="stat">Coins: <span id="coins">0</span></div>
-  <div class="stat">Total Characters: <span id="totalChars">0</span></div>
+  <h1>📊 Your Stats</h1>
+
+  <div class="stat" id="coinsStat">Coins: 0</div>
+  <div class="stat" id="totalChars">Total Characters: 0</div>
+  <div class="stat" id="packsOpened">Total Packs Opened: 0</div>
+
+  <h2>Rarity Breakdown</h2>
+  <div class="rarity">
+    <div class="common" id="commonCount">Common: 0</div>
+    <div class="rare" id="rareCount">Rare: 0</div>
+    <div class="chroma" id="chromaCount">Chroma: 0</div>
+  </div>
 </div>
 
 <script>
   let coins = parseInt(localStorage.getItem("coins")) || 100;
-  let characters = JSON.parse(localStorage.getItem("characters")) || [];
+  let characters = JSON.parse(localStorage.getItem("characters")) || {};
+  let packsOpened = parseInt(localStorage.getItem("packsOpened")) || 0;
 
-  document.getElementById("coins").innerText = coins;
-  document.getElementById("totalChars").innerText = characters.length;
+  // Count totals
+  let totalChars = 0, common=0, rare=0, chroma=0;
+  for(let id in characters){
+    totalChars += characters[id].count;
+    if(characters[id].rarity === "common") common += characters[id].count;
+    else if(characters[id].rarity === "rare") rare += characters[id].count;
+    else if(characters[id].rarity === "chroma") chroma += characters[id].count;
+  }
+
+  document.getElementById("coinsStat").innerText = "Coins: " + coins;
+  document.getElementById("totalChars").innerText = "Total Characters: " + totalChars;
+  document.getElementById("packsOpened").innerText = "Total Packs Opened: " + packsOpened;
+  document.getElementById("commonCount").innerText = "Common: " + common;
+  document.getElementById("rareCount").innerText = "Rare: " + rare;
+  document.getElementById("chromaCount").innerText = "Chroma: " + chroma;
 </script>
 
 </body>
