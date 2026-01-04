@@ -24,17 +24,16 @@
 
 <div class="container">
   <h1>🪙 Stats</h1>
-  <div class="stat">Coins: <span id="coins">100</span></div>
+  <div class="stat">Coins: <span id="coins">0</span></div>
   <div class="stat">Total Characters: <span id="totalChars">0</span></div>
 </div>
 
 <script>
-  // Temporary stats; will connect to actual game later
-  let coins = 100;
-  let totalChars = 0;
+  let coins = parseInt(localStorage.getItem("coins")) || 100;
+  let characters = JSON.parse(localStorage.getItem("characters")) || [];
 
   document.getElementById("coins").innerText = coins;
-  document.getElementById("totalChars").innerText = totalChars;
+  document.getElementById("totalChars").innerText = characters.length;
 </script>
 
 </body>
