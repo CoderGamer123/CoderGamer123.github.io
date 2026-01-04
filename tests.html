@@ -8,10 +8,13 @@
     .topbar a { color: white; text-decoration: none; font-weight: bold; }
     .topbar a:hover { text-decoration: underline; }
     .container { padding: 30px; text-align: center; }
-    .char { padding: 10px; margin: 8px auto; width: 250px; border-radius: 10px; display: flex; align-items: center; gap: 10px; }
+    .char { padding: 10px; margin: 8px auto; width: 300px; border-radius: 10px; display: flex; align-items: center; gap: 10px; justify-content: space-between; }
     .common { background-color: gray; }
     .rare { background-color: blue; }
     .legendary { background-color: gold; color: black; }
+    .char img { width: 50px; border-radius: 5px; }
+    .sellButton { background-color: red; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 5px; }
+    .sellButton:hover { background-color: darkred; }
   </style>
 </head>
 <body>
@@ -27,25 +30,42 @@
 
 <div class="container">
   <h1>🧪 Your Collection</h1>
-  <div id="characters">Loading...</div>
+  <div id="characters"></div>
 </div>
 
 <script>
-  let characters = JSON.parse(localStorage.getItem("characters")) || [];
+  let characters = JSON.parse(localStorage.getItem("characters")) || {};
+  let coins = parseInt(localStorage.getItem("coins")) || 100;
+
   const div = document.getElementById("characters");
   div.innerHTML = "";
 
-  if(characters.length === 0) {
+  if(Object.keys(characters).length === 0){
     div.innerHTML = "No characters yet. Buy packs to collect them!";
   } else {
-    characters.forEach(char => {
+    for(let name in characters){
+      const char = characters[name];
       div.innerHTML += `
         <div class="char ${char.rarity}">
-          <img src="${char.img}" width="50" alt="${char.name}"/>
-          ${char.name} (${char.rarity})
+          <div style="display:flex; align-items:center; gap:10px;">
+            <img src="${char.img}" alt="${name}"/>
+            <span>${name} x${char.count}</span>
+          </div>
+          <button class="sellButton" onclick="sellChar('${name}')">Sell</button>
         </div>
       `;
-    });
+    }
+  }
+
+  function sellChar(name){
+    if(characters[name]){
+      coins += 10; // sell price fixed at 10 coins
+      characters[name].count -= 1;
+      if(characters[name].count <= 0) delete characters[name];
+      localStorage.setItem("characters", JSON.stringify(characters));
+      localStorage.setItem("coins", coins);
+      location.reload(); // refresh page to update display
+    }
   }
 </script>
 
