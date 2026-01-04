@@ -4,21 +4,156 @@
   <title>Testit</title>
   <style>
     body {
+      margin: 0;
+      font-family: Arial, sans-serif;
       background-color: #0b1020;
       color: white;
-      font-family: Arial, sans-serif;
+    }
+
+    /* Top bar */
+    .topbar {
+      background-color: #1f2937;
+      padding: 15px;
+      font-size: 24px;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .coins {
+      background-color: #111827;
+      padding: 8px 15px;
+      border-radius: 10px;
+      font-size: 18px;
+    }
+
+    /* Main content */
+    .container {
+      padding: 30px;
       text-align: center;
     }
-    h1 {
-      margin-top: 100px;
-      font-size: 48px;
+
+    .pack {
+      background-color: #2563eb;
+      width: 220px;
+      margin: 30px auto;
+      padding: 20px;
+      border-radius: 16px;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+      transition: transform 0.2s;
+    }
+
+    .pack:hover {
+      transform: scale(1.05);
+      background-color: #1d4ed8;
+    }
+
+    .pack h2 {
+      margin: 0;
+    }
+
+    .pack p {
+      margin-top: 10px;
+      font-size: 16px;
+    }
+
+    /* Collection */
+    .collection {
+      margin-top: 40px;
+      background-color: #111827;
+      padding: 20px;
+      border-radius: 15px;
+    }
+
+    .char {
+      background-color: #1f2937;
+      padding: 10px;
+      margin: 8px auto;
+      width: 250px;
+      border-radius: 10px;
     }
   </style>
 </head>
+
 <body>
 
-  <h1>🎮 Testit is Working!</h1>
-  <p>If you see this, your site is loading correctly.</p>
+  <div class="topbar">
+    <div>🎮 Testit</div>
+    <div class="coins">🪙 <span id="coins">100</span></div>
+  </div>
+
+  <div class="container">
+
+    <div class="pack" onclick="buyPack()">
+      <h2>Starter Pack</h2>
+      <p>Cost: 30 Coins</p>
+    </div>
+
+    <div class="collection">
+      <h2>Your Collection</h2>
+      <div id="characters"></div>
+    </div>
+
+  </div>
+
+  <script>
+    let coins = 100;
+    let characters = [];
+
+    // Characters with rarities
+    const possibleCharacters = [
+      { name: "Blocky", rarity: "Common" },
+      { name: "Zapster", rarity: "Common" },
+      { name: "Frosto", rarity: "Rare" },
+      { name: "Shadowbit", rarity: "Legendary" }
+    ];
+
+    function updateCoins() {
+      document.getElementById("coins").innerText = coins;
+    }
+
+    function buyPack() {
+      if (coins < 30) {
+        alert("Not enough coins!");
+        return;
+      }
+
+      coins -= 30;
+      updateCoins();
+
+      // Random character logic
+      const roll = Math.random();
+      let chosen;
+
+      if (roll < 0.5) chosen = possibleCharacters[0];
+      else if (roll < 0.85) chosen = possibleCharacters[2];
+      else chosen = possibleCharacters[3];
+
+      characters.push(chosen);
+      updateCollection();
+
+      alert(`You got ${chosen.name} (${chosen.rarity})!`);
+    }
+
+    function updateCollection() {
+      const div = document.getElementById("characters");
+      div.innerHTML = "";
+
+      characters.forEach(char => {
+        div.innerHTML += `
+          <div class="char">
+            ${char.name} - ${char.rarity}
+          </div>
+        `;
+      });
+    }
+
+    // Initial render
+    updateCoins();
+    updateCollection();
+  </script>
 
 </body>
 </html>
