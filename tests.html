@@ -8,68 +8,45 @@
     .topbar a { color:white; text-decoration:none; font-weight:bold; }
     .topbar a:hover { text-decoration:underline; }
     .container { padding:30px; display:flex; flex-wrap:wrap; justify-content:center; gap:20px; }
-
-    .char-card { width:160px; padding:15px; border-radius:12px; display:flex; flex-direction:column; align-items:center; justify-content:space-between; font-weight:bold; transition:transform 0.2s, box-shadow 0.2s; cursor:pointer; box-shadow:0 4px 10px rgba(0,0,0,0.5); position:relative; }
-    .char-card:hover { transform:scale(1.05); box-shadow:0 8px 20px rgba(0,0,0,0.7); }
-
-    .common { background-color:#4b5563; color:white; border:2px solid #374151; }
-    .rare { background-color:#1e40af; color:white; border:2px solid #3b82f6; }
-    .chroma { background-color:#800080; color:white; border:2px solid #d946ef; }
-
-    .char-card img { width:80px; border-radius:8px; margin-bottom:8px; }
-    .count { margin-top:5px; font-size:14px; }
-    .sellButton { background-color:#dc2626; color:white; border:none; padding:5px 10px; cursor:pointer; border-radius:5px; margin-top:8px; }
-    .sellButton:hover { background-color:#b91c1c; }
+    .card { background:#1f2937; padding:15px; border-radius:12px; width:150px; text-align:center; box-shadow:0 4px 10px rgba(0,0,0,0.5); }
+    .common { border:3px solid #4b5563; }
+    .rare { border:3px solid #1e40af; }
+    .chroma { border:3px solid #800080; }
+    img { width:100px; height:100px; }
   </style>
 </head>
 <body>
-
 <div class="topbar">
   <a href="index.html">Home</a>
   <a href="stats.html">Stats</a>
   <a href="tests.html">Tests</a>
   <a href="shop.html">Shop</a>
   <a href="announcements.html">Announcements</a>
+  <a href="leaderboard.html">Leaderboard</a>
   <a href="admin.html">Admin</a>
 </div>
 
-<div class="container" id="characters"></div>
+<div class="container" id="testsContainer"></div>
 
 <script>
   let characters = JSON.parse(localStorage.getItem("characters")) || {};
-  let coins = parseInt(localStorage.getItem("coins")) || 100;
 
-  const container = document.getElementById("characters");
+  const container = document.getElementById("testsContainer");
   container.innerHTML = "";
 
-  if(Object.keys(characters).length === 0){
-    container.innerHTML = "<p>No characters yet. Buy packs to collect them!</p>";
-  } else {
-    for(let id in characters){
-      const char = characters[id];
-
-      const card = document.createElement("div");
-      card.className = `char-card ${char.rarity}`;
-      card.innerHTML = `
-        <img src="${char.img}" alt="${char.name}" />
-        <div>${char.name}</div>
-        <div class="count">x${char.count}</div>
-        <button class="sellButton">Sell</button>
-      `;
-      card.querySelector(".sellButton").onclick = function(e){
-        e.stopPropagation();
-        coins += 10;
-        char.count -= 1;
-        if(char.count <= 0) delete characters[id];
-        localStorage.setItem("characters", JSON.stringify(characters));
-        localStorage.setItem("coins", coins);
-        location.reload();
-      };
-      container.appendChild(card);
-    }
+  for(let id in characters){
+    const c = characters[id];
+    const div = document.createElement("div");
+    div.className = `card ${c.rarity}`;
+    div.innerHTML = `
+      <img src="${c.img}" alt="${c.name}"/>
+      <h3>${c.name}</h3>
+      <p>Rarity: ${c.rarity}</p>
+      <p>Count: ${c.count}</p>
+    `;
+    container.appendChild(div);
   }
 </script>
-
 </body>
 </html>
 
