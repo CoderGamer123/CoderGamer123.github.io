@@ -1,10 +1,83 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>My First Website</title>
+  <title>Pack Opening Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #111;
+      color: white;
+      text-align: center;
+    }
+
+    button {
+      padding: 12px 24px;
+      font-size: 18px;
+      margin: 10px;
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+      background-color: #28a745;
+      color: white;
+    }
+
+    #characters {
+      margin-top: 20px;
+    }
+  </style>
 </head>
 <body>
-  <h1>Hello World!</h1>
-  <p>This is my first GitHub website.</p>
+
+  <h1>Pack Opening Game</h1>
+  <p>You start with <span id="coins">100</span> coins.</p>
+
+  <button onclick="buyPack()">Buy Pack (30 coins)</button>
+
+  <h2>Your Characters:</h2>
+  <div id="characters"></div>
+
+  <script>
+    let coins = 100;
+    let characters = [];
+
+    // Possible characters you can get from packs
+    const possibleCharacters = [
+      "Red Warrior",
+      "Blue Mage",
+      "Green Archer",
+      "Golden Knight",
+      "Silver Thief"
+    ];
+
+    function updateCoins() {
+      document.getElementById("coins").innerText = coins;
+    }
+
+    function showCharacters() {
+      const div = document.getElementById("characters");
+      div.innerHTML = "";
+      characters.forEach((char, index) => {
+        div.innerHTML += `<p>${index + 1}. ${char}</p>`;
+      });
+    }
+
+    function buyPack() {
+      if (coins < 30) {
+        alert("Not enough coins!");
+        return;
+      }
+      coins -= 30;
+      updateCoins();
+
+      // Get random character
+      const randomIndex = Math.floor(Math.random() * possibleCharacters.length);
+      const newChar = possibleCharacters[randomIndex];
+      characters.push(newChar);
+
+      alert("You got: " + newChar + "!");
+      showCharacters();
+    }
+  </script>
+
 </body>
 </html>
