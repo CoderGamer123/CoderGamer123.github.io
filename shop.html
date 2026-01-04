@@ -12,6 +12,7 @@
     .pack:hover { transform: scale(1.05); background-color: #1d4ed8; }
     .pack h2 { margin: 0; }
     .pack p { margin-top: 10px; font-size: 16px; }
+    #coinsDisplay { font-size: 22px; margin-top: 20px; }
   </style>
 </head>
 <body>
@@ -27,39 +28,56 @@
 
 <div class="container">
   <h1>🎁 Shop</h1>
-  <div class="pack" onclick="buyPack()">
+  <div id="coinsDisplay">Coins: 0</div>
+
+  <div class="pack" onclick="buyPack(30)">
     <h2>Starter Pack</h2>
     <p>Cost: 30 Coins</p>
   </div>
-  <div class="pack" onclick="buyPack()"> <!-- placeholder extra pack -->
+
+  <div class="pack" onclick="buyPack(50)">
     <h2>Rare Pack</h2>
     <p>Cost: 50 Coins</p>
   </div>
+
+  <div id="lastPackResult"></div>
 </div>
 
 <script>
-  let coins = 100;
-  let characters = [];
+  // Load coins and characters from localStorage
+  let coins = parseInt(localStorage.getItem("coins")) || 100;
+  let characters = JSON.parse(localStorage.getItem("characters")) || [];
+
+  document.getElementById("coinsDisplay").innerText = "Coins: " + coins;
 
   const possibleCharacters = [
-    { name: "Blocky", rarity: "common" },
-    { name: "Zapster", rarity: "common" },
-    { name: "Frosto", rarity: "rare" },
-    { name: "Shadowbit", rarity: "legendary" }
+    {name:"Blocky", rarity:"common", img:"https://via.placeholder.com/100/888888?text=Blocky"},
+    {name:"Zapster", rarity:"common", img:"https://via.placeholder.com/100/888888?text=Zapster"},
+    {name:"Frosto", rarity:"rare", img:"https://via.placeholder.com/100/0000FF?text=Frosto"},
+    {name:"Shadowbit", rarity:"legendary", img:"https://via.placeholder.com/100/FFD700?text=Shadowbit"}
   ];
 
-  function buyPack() {
-    if (coins < 30) { alert("Not enough coins!"); return; }
-    coins -= 30;
+  function buyPack(cost) {
+    if(coins < cost) { alert("Not enough coins!"); return; }
 
-    const roll = Math.random();
+    coins -= cost;
+    localStorage.setItem("coins", coins);
+    document.getElementById("coinsDisplay").innerText = "Coins: " + coins;
+
+    // Random character drop
+    let roll = Math.random();
     let chosen;
-    if (roll < 0.5) chosen = possibleCharacters[0];
-    else if (roll < 0.85) chosen = possibleCharacters[2];
+    if(roll < 0.5) chosen = possibleCharacters[0];
+    else if(roll < 0.85) chosen = possibleCharacters[2];
     else chosen = possibleCharacters[3];
 
     characters.push(chosen);
-    alert(`You got ${chosen.name} (${chosen.rarity})!`);
+    localStorage.setItem("characters", JSON.stringify(characters));
+
+    // Show pack result with image
+    document.getElementById("lastPackResult").innerHTML =
+      `<h3>You got ${chosen.name} (${chosen.rarity})!</h3>` +
+      `<img src="${chosen.img}" alt="${chosen.name}" width="100" />`;
   }
 </script>
 
