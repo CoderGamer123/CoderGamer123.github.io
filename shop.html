@@ -3,31 +3,23 @@
 <head>
   <title>Testit - Shop</title>
   <style>
-    body { margin: 0; font-family: Arial; background: #0b1020; color: white; }
-    .topbar { background: #1f2937; padding: 15px; display: flex; justify-content: center; gap: 20px; }
-    .topbar a { color: white; text-decoration: none; font-weight: bold; }
-    .topbar a:hover { text-decoration: underline; }
-    .container { padding: 30px; text-align: center; }
+    body { margin:0; font-family: Arial; background:#0b1020; color:white; text-align:center; }
+    .topbar { background:#1f2937; padding:15px; display:flex; justify-content:center; gap:20px; }
+    .topbar a { color:white; text-decoration:none; font-weight:bold; }
+    .topbar a:hover { text-decoration:underline; }
+    .container { padding:30px; }
 
-    .pack { background-color: #2563eb; width: 220px; margin: 30px auto; padding: 20px; border-radius: 16px; cursor: pointer; box-shadow: 0 8px 20px rgba(0,0,0,0.4); transition: transform 0.2s; }
-    .pack:hover { transform: scale(1.05); background-color: #1d4ed8; }
+    .pack { background-color:#2563eb; width:220px; margin:30px auto; padding:20px; border-radius:16px; cursor:pointer; box-shadow:0 8px 20px rgba(0,0,0,0.4); transition: transform 0.2s; }
+    .pack:hover { transform: scale(1.05); background-color:#1d4ed8; }
 
-    #packAnimation { margin: 30px auto; width: 150px; height: 150px; border: 2px solid white; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 24px; animation: none; position: relative; overflow: hidden; }
-    
-    @keyframes shake {
-      0% { transform: rotate(0deg); }
-      25% { transform: rotate(10deg); }
-      50% { transform: rotate(-10deg); }
-      75% { transform: rotate(10deg); }
-      100% { transform: rotate(0deg); }
-    }
+    #packAnimation { margin:30px auto; width:150px; height:150px; border:2px solid white; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:24px; position:relative; overflow:hidden; }
 
     .glitter {
-      position: absolute;
-      width: 4px;
-      height: 4px;
-      background: white;
-      border-radius: 50%;
+      position:absolute;
+      width:4px;
+      height:4px;
+      background:white;
+      border-radius:50%;
       animation: sparkle 1s linear infinite;
     }
 
@@ -37,7 +29,7 @@
       100% { transform: translate(100px,-100px) scale(0); opacity:0; }
     }
 
-    #coinsDisplay { font-size: 22px; margin-top: 20px; }
+    #coinsDisplay { font-size:22px; margin-top:20px; }
   </style>
 </head>
 <body>
@@ -55,12 +47,12 @@
   <h1>🎁 Shop</h1>
   <div id="coinsDisplay">Coins: 0</div>
 
-  <div class="pack" onclick="buyPack(30)"> 
+  <div class="pack" onclick="buyPack(30)">
     <h2>Starter Pack</h2>
     <p>Cost: 30 Coins</p>
   </div>
 
-  <div class="pack" onclick="buyPack(50)"> 
+  <div class="pack" onclick="buyPack(50)">
     <h2>Rare Pack</h2>
     <p>Cost: 50 Coins</p>
   </div>
@@ -70,21 +62,20 @@
 </div>
 
 <script>
-  // --- LOAD COINS & COLLECTION ---
   let coins = parseInt(localStorage.getItem("coins")) || 100;
-  let characters = JSON.parse(localStorage.getItem("characters")) || {}; 
+  let characters = JSON.parse(localStorage.getItem("characters")) || {};
 
   document.getElementById("coinsDisplay").innerText = "Coins: " + coins;
 
   const possibleCharacters = [
-    {name:"Blocky", rarity:"common", chromas:["gray","red"], imgBase:"https://via.placeholder.com/100/888888?text=Blocky"},
-    {name:"Zapster", rarity:"common", chromas:["gray","green"], imgBase:"https://via.placeholder.com/100/888888?text=Zapster"},
-    {name:"Frosto", rarity:"rare", chromas:["blue","cyan"], imgBase:"https://via.placeholder.com/100/0000FF?text=Frosto"},
-    {name:"Shadowbit", rarity:"legendary", chromas:["gold","purple"], imgBase:"https://via.placeholder.com/100/FFD700?text=Shadowbit"}
+    {name:"Blocky", rarity:"common", img:"https://via.placeholder.com/100/888888?text=Blocky"},
+    {name:"Zapster", rarity:"common", img:"https://via.placeholder.com/100/888888?text=Zapster"},
+    {name:"Frosto", rarity:"rare", img:"https://via.placeholder.com/100/0000FF?text=Frosto"},
+    {name:"Shadowbit", rarity:"chroma", img:"https://via.placeholder.com/100/800080?text=Shadowbit"} // chroma rarity
   ];
 
-  function buyPack(cost) {
-    if(coins < cost) { alert("Not enough coins!"); return; }
+  function buyPack(cost){
+    if(coins < cost){ alert("Not enough coins!"); return; }
 
     coins -= cost;
     localStorage.setItem("coins", coins);
@@ -94,47 +85,44 @@
     packDiv.innerText = "📦";
     packDiv.style.animation = "shake 1s";
 
-    // --- Add glitter for rare/legendary ---
-    packDiv.innerHTML = "📦"; // reset
-    const roll = Math.random();
+    // --- Pick random character with probabilities ---
+    let roll = Math.random();
     let chosen;
-    if(roll < 0.5) chosen = possibleCharacters[0];
-    else if(roll < 0.85) chosen = possibleCharacters[2];
-    else chosen = possibleCharacters[3];
-
-    // select random chroma
-    const chroma = chosen.chromas[Math.floor(Math.random()*chosen.chromas.length)];
-    const imgURL = chosen.imgBase + "&chroma=" + chroma; // placeholder URL
-
-    // show glitter for rare+legendary
-    if(chosen.rarity === "rare" || chosen.rarity === "legendary"){
-      for(let i=0;i<20;i++){
-        const g = document.createElement("div");
-        g.className = "glitter";
-        g.style.left = Math.random()*120 + "px";
-        g.style.top = Math.random()*120 + "px";
-        packDiv.appendChild(g);
-      }
-    }
+    if(roll < 0.5) chosen = possibleCharacters[0];        // common 50%
+    else if(roll < 0.85) chosen = possibleCharacters[2];  // rare 35%
+    else chosen = possibleCharacters[3];                  // chroma 15%
 
     setTimeout(()=>{
       packDiv.style.animation = "none";
 
-      // --- ADD TO COLLECTION ---
-      const id = chosen.name + "_" + chroma; // unique for chroma
+      // show glitter if rare or chroma
+      packDiv.innerHTML = "";
+      if(chosen.rarity === "rare" || chosen.rarity === "chroma"){
+        for(let i=0;i<20;i++){
+          const g = document.createElement("div");
+          g.className="glitter";
+          g.style.left=Math.random()*120+"px";
+          g.style.top=Math.random()*120+"px";
+          packDiv.appendChild(g);
+        }
+      }
+
+      // add to collection
+      const id = chosen.name + "_" + chosen.rarity;
       if(characters[id]){
         characters[id].count += 1;
       } else {
-        characters[id] = {count:1, rarity:chosen.rarity, img:imgURL, name:chosen.name, chroma:chroma};
+        characters[id] = {count:1, rarity:chosen.rarity, img:chosen.img, name:chosen.name};
       }
       localStorage.setItem("characters", JSON.stringify(characters));
 
-      packDiv.innerHTML = `<img src="${imgURL}" width="100" alt="${chosen.name} (${chroma})"/>`;
-      document.getElementById("lastPackResult").innerHTML = `<h3>You got ${chosen.name} (${chosen.rarity}) - Chroma: ${chroma}!</h3>`;
-    }, 1000);
+      packDiv.innerHTML += `<img src="${chosen.img}" width="100" alt="${chosen.name}"/>`;
+      document.getElementById("lastPackResult").innerHTML = `<h3>You got ${chosen.name} (${chosen.rarity})!</h3>`;
+    },1000);
   }
 </script>
 
 </body>
 </html>
+
 
