@@ -55,8 +55,9 @@
 </div>
 
 <script>
+  // --- LOAD COINS & COLLECTION ---
   let coins = parseInt(localStorage.getItem("coins")) || 100;
-  let characters = JSON.parse(localStorage.getItem("characters")) || [];
+  let characters = JSON.parse(localStorage.getItem("characters")) || {}; // dictionary with counts
 
   document.getElementById("coinsDisplay").innerText = "Coins: " + coins;
 
@@ -74,29 +75,33 @@
     localStorage.setItem("coins", coins);
     document.getElementById("coinsDisplay").innerText = "Coins: " + coins;
 
-    // Start pack animation
+    // --- PACK ANIMATION ---
     const packDiv = document.getElementById("packAnimation");
     packDiv.innerText = "📦";
     packDiv.style.animation = "shake 1s";
 
-    // Wait for animation to finish
     setTimeout(() => {
       packDiv.style.animation = "none";
 
-      // Random character drop
+      // --- PICK RANDOM CHARACTER ---
       let roll = Math.random();
       let chosen;
       if(roll < 0.5) chosen = possibleCharacters[0];
       else if(roll < 0.85) chosen = possibleCharacters[2];
       else chosen = possibleCharacters[3];
 
-      characters.push(chosen);
+      // --- ADD TO COLLECTION ---
+      if(characters[chosen.name]) {
+        characters[chosen.name].count += 1;
+      } else {
+        characters[chosen.name] = {count:1, rarity:chosen.rarity, img:chosen.img};
+      }
       localStorage.setItem("characters", JSON.stringify(characters));
 
-      // Show character in animation div
+      // --- SHOW RESULT ---
       packDiv.innerHTML = `<img src="${chosen.img}" width="100" alt="${chosen.name}"/>`;
       document.getElementById("lastPackResult").innerHTML = `<h3>You got ${chosen.name} (${chosen.rarity})!</h3>`;
-    }, 1000); // 1 second shake
+    }, 1000);
   }
 </script>
 
