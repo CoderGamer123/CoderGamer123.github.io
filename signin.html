@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>Testit - Sign In</title>
+  <script src="helper.js"></script>
   <style>
     body { margin:0; font-family: Arial; background:#0b1020; color:white; text-align:center; }
     .container { max-width:400px; margin:50px auto; background:#1f2937; padding:30px; border-radius:12px; }
@@ -18,7 +19,6 @@
   <input type="password" id="password" placeholder="Password">
   <button onclick="signin()">Sign In</button>
   <p>Don't have an account? <a href="signup.html">Sign Up</a></p>
-  <div id="message"></div>
 </div>
 
 <script>
@@ -31,15 +31,13 @@ function signin(){
   if(!users[username]) return alert("User not found!");
   if(users[username].password !== password) return alert("Incorrect password!");
 
-  // Save current logged-in user
   localStorage.setItem("currentUser", username);
-  alert("✅ Logged in as " + username);
 
-  // Load user data for game
   localStorage.setItem("coins", users[username].coins);
   localStorage.setItem("characters", JSON.stringify(users[username].characters));
   localStorage.setItem("packsOpened", users[username].packsOpened);
 
+  alert("✅ Logged in as " + username);
   window.location.href = "index.html";
 }
 </script>
