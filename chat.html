@@ -4,189 +4,92 @@
   <title>Testit - Chat</title>
   <script src="helper.js"></script>
   <style>
-    body {
-      margin: 0;
-      font-family: Arial;
-      background: #0b1020;
-      color: white;
-    }
-
-    .container {
-      max-width: 600px;
-      margin: 40px auto;
-      background: #1f2937;
-      border-radius: 12px;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      height: 70vh;
-    }
-
-    h1 {
-      margin: 0 0 10px 0;
-    }
-
-    .messages {
-      flex: 1;
-      overflow-y: auto;
-      background: #111827;
-      padding: 10px;
-      border-radius: 8px;
-      margin-bottom: 10px;
-    }
-
-    .message {
-      margin-bottom: 6px;
-    }
-
-    .user {
-      font-weight: bold;
-      color: #60a5fa;
-    }
-
-    .input-row {
-      display: flex;
-      gap: 10px;
-    }
-
-    input {
-      flex: 1;
-      padding: 10px;
-      border-radius: 8px;
-      border: none;
-      font-size: 16px;
-    }
-
-    button {
-      padding: 10px 16px;
-      border-radius: 8px;
-      border: none;
-      background: #2563eb;
-      color: white;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background: #1d4ed8;
-    }
-
-    .typing {
-      font-size: 12px;
-      color: #9ca3af;
-      margin-top: 6px;
-      height: 14px;
-    }
+    body { margin:0; font-family:Arial; background:#0b1020; color:white; }
+    .box { max-width:600px; margin:40px auto; background:#1f2937; padding:20px; border-radius:12px; height:70vh; display:flex; flex-direction:column; }
+    .messages { flex:1; background:#111827; padding:10px; border-radius:8px; overflow-y:auto; }
+    .msg { margin-bottom:6px; }
+    .user { color:#60a5fa; font-weight:bold; }
+    .row { display:flex; gap:10px; margin-top:10px; }
+    input { flex:1; padding:10px; border-radius:8px; border:none; }
+    button { padding:10px; border-radius:8px; border:none; background:#2563eb; color:white; }
+    .typing { font-size:12px; color:#9ca3af; margin-top:5px; height:14px; }
   </style>
 </head>
 <body>
 
 <script>
-  // Block access if not logged in
+  loadTopbar();
   const currentUser = getCurrentUser();
 </script>
 
-<div class="container">
-  <h1>💬 Global Chat</h1>
-
+<div class="box">
+  <h2>💬 Global Chat</h2>
   <div id="messages" class="messages"></div>
 
-  <div class="input-row">
-    <input id="chatInput" placeholder="Type a message..." maxlength="200">
-    <button onclick="sendMessage()">Send</button>
+  <div class="row">
+    <input id="chatInput" placeholder="Type a message">
+    <button onclick="send()">Send</button>
   </div>
-
-  <div id="typingText" class="typing"></div>
+  <div id="typing" class="typing"></div>
 </div>
 
 <script>
-const CHAT_KEY = "globalChat";
-const TYPING_KEY = "typingUsers";
-const TYPING_TIMEOUT = 2000;
+const CHAT = "globalChat";
+const TYPING = "typingUsers";
 
-// Load messages
-function loadChat() {
-  let chat = JSON.parse(localStorage.getItem(CHAT_KEY)) || [];
+function load() {
+  let chat = JSON.parse(localStorage.getItem(CHAT)) || [];
   let box = document.getElementById("messages");
   box.innerHTML = "";
-
-  chat.forEach(msg => {
-    let div = document.createElement("div");
-    div.className = "message";
-    div.innerHTML = `<span class="user">${msg.user}:</span> ${msg.text}`;
-    box.appendChild(div);
+  chat.forEach(m => {
+    box.innerHTML += `<div class="msg"><span class="user">${m.user}:</span> ${m.text}</div>`;
   });
-
   box.scrollTop = box.scrollHeight;
 }
 
-// Send message
-function sendMessage() {
+function send() {
   let input = document.getElementById("chatInput");
-  let text = input.value.trim();
-  if (!text) return;
+  if (!input.value.trim()) return;
 
-  let chat = JSON.parse(localStorage.getItem(CHAT_KEY)) || [];
-  chat.push({
-    user: currentUser,
-    text: text,
-    time: Date.now()
-  });
-
+  let chat = JSON.parse(localStorage.getItem(CHAT)) || [];
+  chat.push({ user: currentUser, text: input.value, time: Date.now() });
   if (chat.length > 100) chat.shift();
 
-  localStorage.setItem(CHAT_KEY, JSON.stringify(chat));
+  localStorage.setItem(CHAT, JSON.stringify(chat));
   input.value = "";
   stopTyping();
-  loadChat();
+  load();
 }
 
-// Typing logic
-function handleTyping() {
-  let typing = JSON.parse(localStorage.getItem(TYPING_KEY)) || {};
-  typing[currentUser] = Date.now();
-  localStorage.setItem(TYPING_KEY, JSON.stringify(typing));
+function typing() {
+  let t = JSON.parse(localStorage.getItem(TYPING)) || {};
+  t[currentUser] = Date.now();
+  localStorage.setItem(TYPING, JSON.stringify(t));
 }
 
 function stopTyping() {
-  let typing = JSON.parse(localStorage.getItem(TYPING_KEY)) || {};
-  delete typing[currentUser];
-  localStorage.setItem(TYPING_KEY, JSON.stringify(typing));
+  let t = JSON.parse(localStorage.getItem(TYPING)) || {};
+  delete t[currentUser];
+  localStorage.setItem(TYPING, JSON.stringify(t));
 }
 
 function showTyping() {
-  let typing = JSON.parse(localStorage.getItem(TYPING_KEY)) || {};
+  let t = JSON.parse(localStorage.getItem(TYPING)) || {};
   let now = Date.now();
-
-  let active = Object.keys(typing).filter(
-    user => user !== currentUser && now - typing[user] < TYPING_TIMEOUT
-  );
-
-  let text = document.getElementById("typingText");
-  if (active.length === 0) {
-    text.textContent = "";
-  } else if (active.length === 1) {
-    text.textContent = `${active[0]} is typing…`;
-  } else {
-    text.textContent = `${active.length} people are typing…`;
-  }
+  let active = Object.keys(t).filter(u => u !== currentUser && now - t[u] < 2000);
+  document.getElementById("typing").textContent =
+    active.length === 1 ? `${active[0]} is typing…` :
+    active.length > 1 ? `Multiple people are typing…` : "";
 }
 
-// Events
 document.getElementById("chatInput").addEventListener("keydown", e => {
-  if (e.key === "Enter") sendMessage();
-  else handleTyping();
+  if (e.key === "Enter") send();
+  else typing();
 });
-
 document.getElementById("chatInput").addEventListener("blur", stopTyping);
 
-// Auto refresh
-setInterval(() => {
-  loadChat();
-  showTyping();
-}, 500);
-
-// Initial load
-loadChat();
+setInterval(() => { load(); showTyping(); }, 500);
+load();
 </script>
 
 </body>
