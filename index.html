@@ -1,23 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Testit - Home</title>
+  <title>Testit</title>
   <script src="helper.js"></script>
-  <style>
-    body { margin:0;font-family:Arial;background:#0b1020;color:white;text-align:center; }
-    .container { padding:60px; }
-  </style>
 </head>
 <body>
 
-<script>getCurrentUser();loadTopbar();</script>
+<script>
+  requireLogin();
+  loadTopbar();
+</script>
 
-<div class="container">
-  <h1>Welcome to Testit</h1>
-  <p>Open packs, collect characters, and compete.</p>
-  <button onclick="location.href='shop.html'">Go to Shop</button>
-</div>
+<h1>Welcome to Testit</h1>
 
 </body>
 </html>
-
