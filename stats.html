@@ -5,14 +5,17 @@
   <script src="helper.js"></script>
   <style>
     body { margin:0; font-family: Arial; background:#0b1020; color:white; text-align:center; }
+    .container { padding:30px; }
     .topbar { background:#1f2937; padding:15px; display:flex; justify-content:center; gap:20px; }
     .topbar a { color:white; text-decoration:none; font-weight:bold; }
     .topbar a:hover { text-decoration:underline; }
-    .container { padding:30px; }
-    p { font-size:18px; margin:8px 0; }
+    h1 { font-size:36px; margin-bottom:20px; }
+    p { font-size:20px; }
   </style>
 </head>
 <body>
+<script>
+document.body.insertAdjacentHTML('afterbegin', `
 <div class="topbar">
   <a href="index.html">Home</a>
   <a href="stats.html">Stats</a>
@@ -22,38 +25,24 @@
   <a href="leaderboard.html">Leaderboard</a>
   <a href="admin.html">Admin</a>
 </div>
+`);
+</script>
 
 <div class="container">
   <h1>Your Stats</h1>
-  <p id="coinsStat"></p>
-  <p id="packsOpened"></p>
-  <p id="totalChars"></p>
-  <p id="commonCount"></p>
-  <p id="rareCount"></p>
-  <p id="chromaCount"></p>
+  <p id="coinsDisplay"></p>
+  <p id="packsDisplay"></p>
+  <p id="charactersDisplay"></p>
 </div>
 
 <script>
 let user = loadUserData();
-let coins = user.coins;
-let characters = user.characters;
-let packsOpened = user.packsOpened;
+document.getElementById("coinsDisplay").innerText = "Coins: " + user.coins;
+document.getElementById("packsDisplay").innerText = "Packs Opened: " + (user.packsOpened || 0);
 
-let totalChars=0, common=0, rare=0, chroma=0;
-for(let id in characters){
-  totalChars += characters[id].count;
-  if(characters[id].rarity==="common") common += characters[id].count;
-  else if(characters[id].rarity==="rare") rare += characters[id].count;
-  else if(characters[id].rarity==="chroma") chroma += characters[id].count;
-}
-
-document.getElementById("coinsStat").innerText = "Coins: " + coins;
-document.getElementById("packsOpened").innerText = "Total Packs Opened: " + packsOpened;
-document.getElementById("totalChars").innerText = "Total Characters: " + totalChars;
-document.getElementById("commonCount").innerText = "Common: " + common;
-document.getElementById("rareCount").innerText = "Rare: " + rare;
-document.getElementById("chromaCount").innerText = "Chroma: " + chroma;
+let total = 0;
+for(let id in user.characters) total += user.characters[id].count;
+document.getElementById("charactersDisplay").innerText = "Total Characters: " + total;
 </script>
 </body>
 </html>
-
