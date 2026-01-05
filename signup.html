@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>Testit - Sign Up</title>
+  <script src="helper.js"></script>
   <style>
     body { margin:0; font-family: Arial; background:#0b1020; color:white; text-align:center; }
     .container { max-width:400px; margin:50px auto; background:#1f2937; padding:30px; border-radius:12px; }
@@ -18,7 +19,6 @@
   <input type="password" id="password" placeholder="Password">
   <button onclick="signup()">Sign Up</button>
   <p>Already have an account? <a href="signin.html">Sign In</a></p>
-  <div id="message"></div>
 </div>
 
 <script>
@@ -27,12 +27,10 @@ function signup(){
   let password = document.getElementById("password").value.trim();
   if(!username || !password) return alert("Enter both username and password");
 
-  // Load existing users
   let users = JSON.parse(localStorage.getItem("users")) || {};
 
   if(users[username]) return alert("Username already exists!");
 
-  // Save new user
   users[username] = {password: password, coins: 100, characters: {}, packsOpened: 0};
   localStorage.setItem("users", JSON.stringify(users));
 
