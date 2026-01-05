@@ -1,7 +1,136 @@
-<div class="topbar">
-  <a href="stats.html">Stats</a> |
-  <a href="tests.html">Tests</a> |
-  <a href="shop.html">Shop</a> |
-  <a href="announcements.html">Announcements</a> |
-  <a href="admin.html">Admin</a>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Testit - Chat</title>
+  <script src="helper.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial;
+      background: #0b1020;
+      color: white;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background: #1f2937;
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      height: 70vh;
+    }
+
+    h1 {
+      margin: 0 0 10px 0;
+    }
+
+    .messages {
+      flex: 1;
+      overflow-y: auto;
+      background: #111827;
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    .message {
+      margin-bottom: 6px;
+    }
+
+    .user {
+      font-weight: bold;
+      color: #60a5fa;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    input {
+      flex: 1;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 10px 16px;
+      border-radius: 8px;
+      border: none;
+      background: #2563eb;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+  </style>
+</head>
+<body>
+
+<script>
+  // Protect page
+  getCurrentUser();
+</script>
+
+<div class="container">
+  <h1>💬 Global Chat</h1>
+
+  <div id="messages" class="messages"></div>
+
+  <div class="input-row">
+    <input id="chatInput" placeholder="Type a message..." maxlength="200">
+    <button onclick="sendMessage()">Send</button>
+  </div>
 </div>
+
+<script>
+const CHAT_KEY = "globalChat";
+
+function loadChat() {
+  let chat = JSON.parse(localStorage.getItem(CHAT_KEY)) || [];
+  let box = document.getElementById("messages");
+  box.innerHTML = "";
+
+  chat.forEach(msg => {
+    let div = document.createElement("div");
+    div.className = "message";
+    div.innerHTML = `<span class="user">${msg.user}:</span> ${msg.text}`;
+    box.appendChild(div);
+  });
+
+  box.scrollTop = box.scrollHeight;
+}
+
+function sendMessage() {
+  let input = document.getElementById("chatInput");
+  let text = input.value.trim();
+  if (!text) return;
+
+  let chat = JSON.parse(localStorage.getItem(CHAT_KEY)) || [];
+  chat.push({
+    user: getCurrentUser(),
+    text: text,
+    time: Date.now()
+  });
+
+  // Limit chat size (anti-lag)
+  if (chat.length > 100) chat.shift();
+
+  localStorage.setItem(CHAT_KEY, JSON.stringify(chat));
+  input.value = "";
+  loadChat();
+}
+
+// Auto refresh chat every second
+setInterval(loadChat, 1000);
+loadChat();
+</script>
+
+</body>
+</html>
