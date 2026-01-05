@@ -4,21 +4,22 @@
   <title>Testit - Sign In</title>
   <script src="helper.js"></script>
   <style>
-    body { margin:0; font-family: Arial; background:#0b1020; color:white; text-align:center; }
-    .container { max-width:400px; margin:50px auto; background:#1f2937; padding:30px; border-radius:12px; }
-    input, button { width:100%; padding:10px; margin:10px 0; border-radius:8px; border:none; font-size:16px; }
+    body { margin:0; font-family:Arial; background:#0b1020; color:white; text-align:center; }
+    .box { max-width:400px; margin:80px auto; background:#1f2937; padding:30px; border-radius:12px; }
+    input, button { width:100%; padding:10px; margin:10px 0; border-radius:8px; border:none; }
     button { background:#2563eb; color:white; cursor:pointer; }
-    button:hover { background:#1d4ed8; }
   </style>
 </head>
 <body>
 
-<div class="container">
+<script>loadTopbar();</script>
+
+<div class="box">
   <h1>Sign In</h1>
   <input id="username" placeholder="Username">
   <input id="password" type="password" placeholder="Password">
   <button onclick="signin()">Sign In</button>
-  <p>No account? <a href="signup.html">Sign Up</a></p>
+  <p><a href="signup.html">Create an account</a></p>
 </div>
 
 <script>
@@ -29,19 +30,10 @@ function signin() {
   let password = document.getElementById("password").value.trim();
 
   let users = JSON.parse(localStorage.getItem("users"));
-
-  if (!users[username]) {
-    alert("User not found");
-    return;
-  }
-
-  if (users[username].password !== password) {
-    alert("Incorrect password");
-    return;
-  }
+  if (!users[username]) return alert("User not found");
+  if (users[username].password !== password) return alert("Wrong password");
 
   localStorage.setItem("currentUser", username);
-  alert("✅ Logged in!");
   window.location.href = "index.html";
 }
 </script>
