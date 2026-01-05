@@ -9,49 +9,52 @@
     input, button { width:100%; padding:10px; margin:10px 0; border-radius:8px; border:none; font-size:16px; }
     button { background:#2563eb; color:white; cursor:pointer; }
     button:hover { background:#1d4ed8; }
-    h1 { margin-bottom:20px; }
   </style>
 </head>
 <body>
-<script>
-document.body.insertAdjacentHTML('afterbegin', `
-<div class="topbar">
-  <a href="index.html">Home</a>
-  <a href="stats.html">Stats</a>
-  <a href="tests.html">Tests</a>
-  <a href="shop.html">Shop</a>
-  <a href="announcements.html">Announcements</a>
-  <a href="leaderboard.html">Leaderboard</a>
-  <a href="admin.html">Admin</a>
-</div>
-`);
-</script>
 
 <div class="container">
   <h1>Sign Up</h1>
-  <input type="text" id="username" placeholder="Username">
-  <input type="password" id="password" placeholder="Password">
-  <button onclick="signup()">Sign Up</button>
+  <input id="username" placeholder="Username">
+  <input id="password" type="password" placeholder="Password">
+  <button onclick="signup()">Create Account</button>
   <p>Already have an account? <a href="signin.html">Sign In</a></p>
 </div>
 
 <script>
-function signup(){
-  let username = document.getElementById("username").value.trim();
+function signup() {
+  initUsers();
+
+  let username = document.getElementById("username").value.trim().toLowerCase();
   let password = document.getElementById("password").value.trim();
-  if(!username || !password) return alert("Enter both username and password");
 
-  let users = JSON.parse(localStorage.getItem("users")) || {};
+  if (!username || !password) {
+    alert("Fill in all fields");
+    return;
+  }
 
-  if(users[username]) return alert("Username already exists!");
+  let users = JSON.parse(localStorage.getItem("users"));
 
-  users[username] = {password: password, coins: 100, characters: {}, packsOpened: 0};
+  if (users[username]) {
+    alert("Username already exists");
+    return;
+  }
+
+  users[username] = {
+    password: password,
+    coins: 100,
+    characters: {},
+    packsOpened: 0,
+    createdAt: Date.now()
+  };
+
   localStorage.setItem("users", JSON.stringify(users));
-
   alert("✅ Account created!");
   window.location.href = "signin.html";
 }
 </script>
+
 </body>
 </html>
+
 
