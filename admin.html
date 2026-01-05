@@ -1,24 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Testit - Admin</title>
+  <title>Admin</title>
   <script src="helper.js"></script>
 </head>
 <body>
 
 <script>
-getCurrentUser();
-loadTopbar();
-if(getCurrentUser()!=="aarav"){
-  alert("Admins only");
-  window.location.href="index.html";
-}
+  const user = requireLogin();
+  loadTopbar();
+
+  if (user !== "admin") {
+    document.body.innerHTML += "<h2>Access denied</h2>";
+    throw new Error("Not admin");
+  }
 </script>
 
-<h1 style="text-align:center">Admin Panel</h1>
-<p style="text-align:center">Admin tools coming soon.</p>
+<h1>Admin Panel</h1>
 
 </body>
 </html>
-
 
