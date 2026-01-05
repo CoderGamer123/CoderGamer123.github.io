@@ -1,115 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Testit - Admin Panel</title>
+  <title>Testit - Admin</title>
   <script src="helper.js"></script>
-  <style>
-    body { margin:0; font-family: Arial; background:#0b1020; color:white; text-align:center; }
-    .topbar { background:#1f2937; padding:15px; display:flex; justify-content:center; gap:20px; }
-    .topbar a { color:white; text-decoration:none; font-weight:bold; }
-    .topbar a:hover { text-decoration:underline; }
-    .container { padding:30px; max-width:500px; margin:auto; }
-    input, button { width:100%; padding:10px; margin:10px 0; border-radius:8px; border:none; font-size:16px; }
-    button { background:#2563eb; color:white; cursor:pointer; }
-    button:hover { background:#1d4ed8; }
-    .adminCommand { text-align:left; margin-top:20px; background:#1f2937; padding:15px; border-radius:8px; }
-  </style>
 </head>
 <body>
 
 <script>
-document.body.insertAdjacentHTML('afterbegin', `
-<div class="topbar">
-  <a href="index.html">Home</a>
-  <a href="stats.html">Stats</a>
-  <a href="tests.html">Tests</a>
-  <a href="shop.html">Shop</a>
-  <a href="announcements.html">Announcements</a>
-  <a href="leaderboard.html">Leaderboard</a>
-  <a href="admin.html">Admin</a>
-</div>
-`);
-</script>
-
-<div class="container">
-  <h1>Admin Panel</h1>
-  <input type="password" id="adminPass" placeholder="Enter Admin Password">
-  <button onclick="checkPassword()">Login</button>
-
-  <div id="adminCommands" style="display:none;">
-    <div class="adminCommand">
-      <h2>Announcements</h2>
-      <input type="text" id="newAnnouncement" placeholder="New announcement">
-      <button onclick="addAnnouncement()">Add Announcement</button>
-    </div>
-
-    <div class="adminCommand">
-      <h2>Give Coins</h2>
-      <input type="text" id="coinUser" placeholder="Username">
-      <input type="number" id="coinAmount" placeholder="Amount">
-      <button onclick="giveCoins()">Give Coins</button>
-    </div>
-
-    <div class="adminCommand">
-      <h2>Reset User</h2>
-      <input type="text" id="resetUser" placeholder="Username">
-      <button onclick="resetUser()">Reset User Coins & Characters</button>
-    </div>
-  </div>
-</div>
-
-<script>
-const ADMIN_PASSWORD = "testitadmin"; // change this if you want
-
-function checkPassword(){
-  let pass = document.getElementById("adminPass").value;
-  if(pass === ADMIN_PASSWORD){
-    alert("Admin access granted!");
-    document.getElementById("adminCommands").style.display="block";
-  } else {
-    alert("Wrong password!");
-  }
-}
-
-// Add announcement
-function addAnnouncement(){
-  let text = document.getElementById("newAnnouncement").value.trim();
-  if(!text) return alert("Enter text!");
-  let announcements = JSON.parse(localStorage.getItem("announcements")) || [];
-  announcements.push(text);
-  localStorage.setItem("announcements", JSON.stringify(announcements));
-  alert("Announcement added!");
-  document.getElementById("newAnnouncement").value = "";
-}
-
-// Give coins
-function giveCoins(){
-  let username = document.getElementById("coinUser").value.trim();
-  let amount = parseInt(document.getElementById("coinAmount").value);
-  if(!username || isNaN(amount)) return alert("Enter valid username and amount");
-  let users = JSON.parse(localStorage.getItem("users")) || {};
-  if(!users[username]) return alert("User not found");
-  users[username].coins += amount;
-  localStorage.setItem("users", JSON.stringify(users));
-  alert(`${amount} coins given to ${username}`);
-  document.getElementById("coinUser").value="";
-  document.getElementById("coinAmount").value="";
-}
-
-// Reset user
-function resetUser(){
-  let username = document.getElementById("resetUser").value.trim();
-  if(!username) return alert("Enter username");
-  let users = JSON.parse(localStorage.getItem("users")) || {};
-  if(!users[username]) return alert("User not found");
-  users[username].coins = 100;
-  users[username].characters = {};
-  users[username].packsOpened = 0;
-  localStorage.setItem("users", JSON.stringify(users));
-  alert(`${username} has been reset`);
-  document.getElementById("resetUser").value="";
+getCurrentUser();
+loadTopbar();
+if(getCurrentUser()!=="aarav"){
+  alert("Admins only");
+  window.location.href="index.html";
 }
 </script>
+
+<h1 style="text-align:center">Admin Panel</h1>
+<p style="text-align:center">Admin tools coming soon.</p>
 
 </body>
 </html>
