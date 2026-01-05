@@ -3,66 +3,13 @@
 <head>
   <title>Testit - Leaderboard</title>
   <script src="helper.js"></script>
-  <style>
-    body { margin:0; font-family: Arial; background:#0b1020; color:white; text-align:center; }
-    .topbar { background:#1f2937; padding:15px; display:flex; justify-content:center; gap:20px; }
-    .topbar a { color:white; text-decoration:none; font-weight:bold; }
-    .topbar a:hover { text-decoration:underline; }
-    .container { padding:30px; max-width:600px; margin:auto; }
-    table { width:100%; border-collapse:collapse; margin-top:20px; }
-    th, td { padding:10px; border-bottom:1px solid #333; }
-    th { background:#1f2937; }
-    td { background:#111827; }
-  </style>
 </head>
 <body>
 
-<script>
-document.body.insertAdjacentHTML('afterbegin', `
-<div class="topbar">
-  <a href="index.html">Home</a>
-  <a href="stats.html">Stats</a>
-  <a href="tests.html">Tests</a>
-  <a href="shop.html">Shop</a>
-  <a href="announcements.html">Announcements</a>
-  <a href="leaderboard.html">Leaderboard</a>
-  <a href="admin.html">Admin</a>
-</div>
-`);
-</script>
+<script>getCurrentUser();loadTopbar();</script>
 
-<div class="container">
-  <h1>Leaderboard</h1>
-  <table id="leaderboardTable">
-    <tr>
-      <th>Rank</th>
-      <th>Username</th>
-      <th>Coins</th>
-      <th>Total Characters</th>
-    </tr>
-  </table>
-</div>
-
-<script>
-let users = JSON.parse(localStorage.getItem("users")) || {};
-let players = [];
-
-for(let username in users){
-  const u = users[username];
-  let totalChars = 0;
-  for(let id in u.characters) totalChars += u.characters[id].count;
-  players.push({name: username, coins: u.coins, charactersCount: totalChars});
-}
-
-players.sort((a,b)=>b.coins - a.coins || b.charactersCount - a.charactersCount);
-
-const table = document.getElementById("leaderboardTable");
-players.forEach((p,i)=>{
-  const row = document.createElement("tr");
-  row.innerHTML = `<td>${i+1}</td><td>${p.name}</td><td>${p.coins}</td><td>${p.charactersCount}</td>`;
-  table.appendChild(row);
-});
-</script>
+<h1 style="text-align:center">Leaderboard</h1>
+<p style="text-align:center">Coming soon.</p>
 
 </body>
 </html>
