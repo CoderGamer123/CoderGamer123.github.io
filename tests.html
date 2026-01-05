@@ -3,67 +3,13 @@
 <head>
   <title>Testit - Tests</title>
   <script src="helper.js"></script>
-  <style>
-    body { margin:0; font-family: Arial; background:#0b1020; color:white; text-align:center; }
-    .container { padding:30px; }
-    .topbar { background:#1f2937; padding:15px; display:flex; justify-content:center; gap:20px; }
-    .topbar a { color:white; text-decoration:none; font-weight:bold; }
-    .topbar a:hover { text-decoration:underline; }
-    .testItem { display:flex; justify-content:space-between; background:#1f2937; margin:10px 0; padding:10px; border-radius:8px; align-items:center; }
-    .testItem img { height:50px; margin-right:10px; }
-    button { padding:5px 12px; border:none; border-radius:6px; background:#2563eb; color:white; cursor:pointer; }
-    button:hover { background:#1d4ed8; }
-  </style>
 </head>
 <body>
-<script>
-document.body.insertAdjacentHTML('afterbegin', `
-<div class="topbar">
-  <a href="index.html">Home</a>
-  <a href="stats.html">Stats</a>
-  <a href="tests.html">Tests</a>
-  <a href="shop.html">Shop</a>
-  <a href="announcements.html">Announcements</a>
-  <a href="leaderboard.html">Leaderboard</a>
-  <a href="admin.html">Admin</a>
-</div>
-`);
-</script>
 
-<div class="container">
-  <h1>Your Tests</h1>
-  <p id="coinsDisplay"></p>
-  <div id="testsContainer"></div>
-</div>
+<script>getCurrentUser();loadTopbar();</script>
 
-<script>
-let user = loadUserData();
-let characters = user.characters || {};
-document.getElementById("coinsDisplay").innerText = "Coins: " + user.coins;
+<h1 style="text-align:center">Tests</h1>
+<p style="text-align:center">Tests coming soon.</p>
 
-function sellCharacter(id){
-  characters[id].count -=1;
-  user.coins +=10; // sell price
-  if(characters[id].count <=0) delete characters[id];
-  user.characters = characters;
-  saveUserData(user);
-  document.getElementById("coinsDisplay").innerText = "Coins: " + user.coins;
-  renderTests();
-}
-
-function renderTests(){
-  const container = document.getElementById("testsContainer");
-  container.innerHTML = "";
-  for(let id in characters){
-    const c = characters[id];
-    const div = document.createElement("div");
-    div.className = "testItem";
-    div.innerHTML = `<img src="${c.img}" alt="${c.name}"><span>${c.name} (${c.rarity}) x${c.count}</span><button onclick="sellCharacter('${id}')">Sell</button>`;
-    container.appendChild(div);
-  }
-}
-
-renderTests();
-</script>
 </body>
 </html>
