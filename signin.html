@@ -13,6 +13,20 @@
   </style>
 </head>
 <body>
+<script>
+document.body.insertAdjacentHTML('afterbegin', `
+<div class="topbar">
+  <a href="index.html">Home</a>
+  <a href="stats.html">Stats</a>
+  <a href="tests.html">Tests</a>
+  <a href="shop.html">Shop</a>
+  <a href="announcements.html">Announcements</a>
+  <a href="leaderboard.html">Leaderboard</a>
+  <a href="admin.html">Admin</a>
+</div>
+`);
+</script>
+
 <div class="container">
   <h1>Sign In</h1>
   <input type="text" id="username" placeholder="Username">
@@ -28,16 +42,10 @@ function signin(){
   if(!username || !password) return alert("Enter both username and password");
 
   let users = JSON.parse(localStorage.getItem("users")) || {};
-  if(!users[username]) return alert("User not found!");
-  if(users[username].password !== password) return alert("Incorrect password!");
+  if(!users[username] || users[username].password !== password) return alert("Invalid username or password");
 
   localStorage.setItem("currentUser", username);
-
-  localStorage.setItem("coins", users[username].coins);
-  localStorage.setItem("characters", JSON.stringify(users[username].characters));
-  localStorage.setItem("packsOpened", users[username].packsOpened);
-
-  alert("✅ Logged in as " + username);
+  alert("✅ Logged in!");
   window.location.href = "index.html";
 }
 </script>
