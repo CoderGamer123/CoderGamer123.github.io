@@ -4,15 +4,13 @@
   <title>Testit - Sign Up</title>
   <script src="helper.js"></script>
   <style>
-    body { margin:0; font-family:Arial; background:#0b1020; color:white; text-align:center; }
-    .box { max-width:400px; margin:80px auto; background:#1f2937; padding:30px; border-radius:12px; }
-    input, button { width:100%; padding:10px; margin:10px 0; border-radius:8px; border:none; }
-    button { background:#2563eb; color:white; cursor:pointer; }
+    body { margin:0;font-family:Arial;background:#0b1020;color:white;text-align:center; }
+    .box { max-width:400px;margin:80px auto;background:#1f2937;padding:30px;border-radius:12px; }
+    input,button { width:100%;padding:10px;margin:10px 0;border-radius:8px;border:none; }
+    button { background:#2563eb;color:white;cursor:pointer; }
   </style>
 </head>
 <body>
-
-<script>loadTopbar();</script>
 
 <div class="box">
   <h1>Sign Up</h1>
@@ -23,27 +21,19 @@
 </div>
 
 <script>
-function signup() {
+function signup(){
   initUsers();
+  let u=document.getElementById("username").value.trim().toLowerCase();
+  let p=document.getElementById("password").value.trim();
+  if(!u||!p) return alert("Fill all fields");
 
-  let username = document.getElementById("username").value.trim().toLowerCase();
-  let password = document.getElementById("password").value.trim();
+  let users=JSON.parse(localStorage.getItem("users"));
+  if(users[u]) return alert("Username exists");
 
-  if (!username || !password) return alert("Fill all fields");
-
-  let users = JSON.parse(localStorage.getItem("users"));
-  if (users[username]) return alert("Username already exists");
-
-  users[username] = {
-    password,
-    coins: 100,
-    characters: {},
-    packsOpened: 0
-  };
-
-  localStorage.setItem("users", JSON.stringify(users));
-  alert("Account created!");
-  window.location.href = "signin.html";
+  users[u]={password:p,coins:100,characters:{},packsOpened:0};
+  localStorage.setItem("users",JSON.stringify(users));
+  alert("Account created");
+  window.location.href="signin.html";
 }
 </script>
 
