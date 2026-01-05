@@ -9,13 +9,16 @@
     .topbar a { color:white; text-decoration:none; font-weight:bold; }
     .topbar a:hover { text-decoration:underline; }
     .container { padding:30px; max-width:600px; margin:auto; }
-    table { width:100%; border-collapse:collapse; }
+    table { width:100%; border-collapse:collapse; margin-top:20px; }
     th, td { padding:10px; border-bottom:1px solid #333; }
     th { background:#1f2937; }
     td { background:#111827; }
   </style>
 </head>
 <body>
+
+<script>
+document.body.insertAdjacentHTML('afterbegin', `
 <div class="topbar">
   <a href="index.html">Home</a>
   <a href="stats.html">Stats</a>
@@ -25,6 +28,8 @@
   <a href="leaderboard.html">Leaderboard</a>
   <a href="admin.html">Admin</a>
 </div>
+`);
+</script>
 
 <div class="container">
   <h1>Leaderboard</h1>
@@ -58,6 +63,6 @@ players.forEach((p,i)=>{
   table.appendChild(row);
 });
 </script>
+
 </body>
 </html>
-
