@@ -4,37 +4,20 @@
   <title>Testit - Home</title>
   <script src="helper.js"></script>
   <style>
-    body { margin:0; font-family: Arial; background:#0b1020; color:white; text-align:center; }
-    .topbar { background:#1f2937; padding:15px; display:flex; justify-content:center; gap:20px; }
-    .topbar a { color:white; text-decoration:none; font-weight:bold; }
-    .topbar a:hover { text-decoration:underline; }
-    .container { padding:50px; }
-    h1 { font-size:48px; }
-    p { font-size:20px; }
-    button { padding:12px 20px; font-size:18px; border:none; border-radius:8px; cursor:pointer; background:#2563eb; color:white; margin-top:20px; }
-    button:hover { background:#1d4ed8; }
+    body { margin:0;font-family:Arial;background:#0b1020;color:white;text-align:center; }
+    .container { padding:60px; }
   </style>
 </head>
 <body>
-<script>
-document.body.insertAdjacentHTML('afterbegin', `
-<div class="topbar">
-  <a href="index.html">Home</a>
-  <a href="stats.html">Stats</a>
-  <a href="tests.html">Tests</a>
-  <a href="shop.html">Shop</a>
-  <a href="announcements.html">Announcements</a>
-  <a href="leaderboard.html">Leaderboard</a>
-  <a href="admin.html">Admin</a>
-</div>
-`);
-</script>
+
+<script>getCurrentUser();loadTopbar();</script>
 
 <div class="container">
-  <h1>Welcome to Testit!</h1>
-  <p>Open packs, collect characters, and become the ultimate collector!</p>
-  <button onclick="window.location.href='shop.html'">Go to Shop</button>
+  <h1>Welcome to Testit</h1>
+  <p>Open packs, collect characters, and compete.</p>
+  <button onclick="location.href='shop.html'">Go to Shop</button>
 </div>
+
 </body>
 </html>
 
