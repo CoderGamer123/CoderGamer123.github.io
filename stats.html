@@ -3,46 +3,24 @@
 <head>
   <title>Testit - Stats</title>
   <script src="helper.js"></script>
-  <style>
-    body { margin:0; font-family: Arial; background:#0b1020; color:white; text-align:center; }
-    .container { padding:30px; }
-    .topbar { background:#1f2937; padding:15px; display:flex; justify-content:center; gap:20px; }
-    .topbar a { color:white; text-decoration:none; font-weight:bold; }
-    .topbar a:hover { text-decoration:underline; }
-    h1 { font-size:36px; margin-bottom:20px; }
-    p { font-size:20px; }
-  </style>
 </head>
 <body>
-<script>
-document.body.insertAdjacentHTML('afterbegin', `
-<div class="topbar">
-  <a href="index.html">Home</a>
-  <a href="stats.html">Stats</a>
-  <a href="tests.html">Tests</a>
-  <a href="shop.html">Shop</a>
-  <a href="announcements.html">Announcements</a>
-  <a href="leaderboard.html">Leaderboard</a>
-  <a href="admin.html">Admin</a>
-</div>
-`);
-</script>
-
-<div class="container">
-  <h1>Your Stats</h1>
-  <p id="coinsDisplay"></p>
-  <p id="packsDisplay"></p>
-  <p id="charactersDisplay"></p>
-</div>
 
 <script>
-let user = loadUserData();
-document.getElementById("coinsDisplay").innerText = "Coins: " + user.coins;
-document.getElementById("packsDisplay").innerText = "Packs Opened: " + (user.packsOpened || 0);
-
-let total = 0;
-for(let id in user.characters) total += user.characters[id].count;
-document.getElementById("charactersDisplay").innerText = "Total Characters: " + total;
+getCurrentUser();
+loadTopbar();
+let u=loadUserData();
 </script>
+
+<h1 style="text-align:center">Your Stats</h1>
+<p style="text-align:center">Coins: <span id="coins"></span></p>
+<p style="text-align:center">Packs Opened: <span id="packs"></span></p>
+
+<script>
+document.getElementById("coins").textContent=u.coins;
+document.getElementById("packs").textContent=u.packsOpened;
+</script>
+
 </body>
 </html>
+
