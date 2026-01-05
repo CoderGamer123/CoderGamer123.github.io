@@ -13,6 +13,20 @@
   </style>
 </head>
 <body>
+<script>
+document.body.insertAdjacentHTML('afterbegin', `
+<div class="topbar">
+  <a href="index.html">Home</a>
+  <a href="stats.html">Stats</a>
+  <a href="tests.html">Tests</a>
+  <a href="shop.html">Shop</a>
+  <a href="announcements.html">Announcements</a>
+  <a href="leaderboard.html">Leaderboard</a>
+  <a href="admin.html">Admin</a>
+</div>
+`);
+</script>
+
 <div class="container">
   <h1>Sign Up</h1>
   <input type="text" id="username" placeholder="Username">
@@ -40,3 +54,4 @@ function signup(){
 </script>
 </body>
 </html>
+
