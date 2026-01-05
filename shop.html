@@ -3,75 +3,21 @@
 <head>
   <title>Testit - Shop</title>
   <script src="helper.js"></script>
-  <style>
-    body { margin:0; font-family: Arial; background:#0b1020; color:white; text-align:center; }
-    .topbar { background:#1f2937; padding:15px; display:flex; justify-content:center; gap:20px; }
-    .topbar a { color:white; text-decoration:none; font-weight:bold; }
-    .topbar a:hover { text-decoration:underline; }
-    .container { padding:30px; }
-    button { padding:10px 20px; font-size:16px; margin:10px; border:none; border-radius:8px; cursor:pointer; background:#2563eb; color:white; }
-    button:hover { background:#1d4ed8; }
-    #lastPackResult { margin-top:20px; font-size:18px; font-weight:bold; }
-  </style>
 </head>
 <body>
-<div class="topbar">
-  <a href="index.html">Home</a>
-  <a href="stats.html">Stats</a>
-  <a href="tests.html">Tests</a>
-  <a href="shop.html">Shop</a>
-  <a href="announcements.html">Announcements</a>
-  <a href="leaderboard.html">Leaderboard</a>
-  <a href="admin.html">Admin</a>
-</div>
-
-<div class="container">
-  <h1>Shop</h1>
-  <p id="coinsDisplay"></p>
-  <button onclick="buyPack(20)">Buy Common Pack (20 coins)</button>
-  <button onclick="buyPack(50)">Buy Rare Pack (50 coins)</button>
-  <p id="lastPackResult"></p>
-</div>
 
 <script>
-let user = loadUserData();
-let coins = user.coins;
-let characters = user.characters;
-let packsOpened = user.packsOpened;
-
-document.getElementById("coinsDisplay").innerText = "Coins: " + coins;
-
-const possibleCharacters = [
-  {name:"Test A", rarity:"common", img:"https://via.placeholder.com/100?text=A"},
-  {name:"Test B", rarity:"common", img:"https://via.placeholder.com/100?text=B"},
-  {name:"Test C", rarity:"rare", img:"https://via.placeholder.com/100?text=C"},
-  {name:"Test D", rarity:"chroma", img:"https://via.placeholder.com/100?text=D"}
-];
-
-function buyPack(cost){
-  if(coins < cost){ alert("Not enough coins!"); return; }
-
-  coins -= cost;
-  packsOpened += 1;
-
-  let roll = Math.random();
-  let chosen;
-  if(roll < 0.5) chosen = possibleCharacters[0];
-  else if(roll < 0.85) chosen = possibleCharacters[2];
-  else chosen = possibleCharacters[3];
-
-  const id = chosen.name + "_" + chosen.rarity;
-  if(characters[id]) characters[id].count +=1;
-  else characters[id] = {count:1, rarity:chosen.rarity, img:chosen.img, name:chosen.name};
-
-  user.coins = coins;
-  user.characters = characters;
-  user.packsOpened = packsOpened;
-  saveUserData(user);
-
-  document.getElementById("coinsDisplay").innerText = "Coins: " + coins;
-  document.getElementById("lastPackResult").innerHTML = `You got ${chosen.name} (${chosen.rarity})!`;
-}
+getCurrentUser();
+loadTopbar();
+let u=loadUserData();
 </script>
+
+<h1 style="text-align:center">Shop</h1>
+<p style="text-align:center">Coins: <span id="coins"></span></p>
+
+<script>
+document.getElementById("coins").textContent=u.coins;
+</script>
+
 </body>
 </html>
