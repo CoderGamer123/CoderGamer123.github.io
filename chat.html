@@ -1,10 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Testit - Chat</title>
+  <script src="helper.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial;
+      background: #0b1020;
+      color: white;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background: #1f2937;
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      height: 70vh;
+    }
+
+    h1 {
+      margin: 0 0 10px 0;
+    }
+
+    .messages {
+      flex: 1;
+      overflow-y: auto;
+      background: #111827;
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    .message {
+      margin-bottom: 6px;
+    }
+
+    .user {
+      font-weight: bold;
+      color: #60a5fa;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    input {
+      flex: 1;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 10px 16px;
+      border-radius: 8px;
+      border: none;
+      background: #2563eb;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    .typing {
+      font-size: 12px;
+      color: #9ca3af;
+      margin-top: 6px;
+      height: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<script>
+  // Block access if not logged in
+  const currentUser = getCurrentUser();
+</script>
+
+<div class="container">
+  <h1>💬 Global Chat</h1>
+
+  <div id="messages" class="messages"></div>
+
+  <div class="input-row">
+    <input id="chatInput" placeholder="Type a message..." maxlength="200">
+    <button onclick="sendMessage()">Send</button>
+  </div>
+
+  <div id="typingText" class="typing"></div>
+</div>
+
 <script>
 const CHAT_KEY = "globalChat";
 const TYPING_KEY = "typingUsers";
 const TYPING_TIMEOUT = 2000;
-
-// Ensure login
-const currentUser = getCurrentUser();
 
 // Load messages
 function loadChat() {
@@ -31,7 +128,7 @@ function sendMessage() {
   let chat = JSON.parse(localStorage.getItem(CHAT_KEY)) || [];
   chat.push({
     user: currentUser,
-    text,
+    text: text,
     time: Date.now()
   });
 
@@ -43,15 +140,54 @@ function sendMessage() {
   loadChat();
 }
 
-// Typing indicator
+// Typing logic
 function handleTyping() {
   let typing = JSON.parse(localStorage.getItem(TYPING_KEY)) || {};
   typing[currentUser] = Date.now();
   localStorage.setItem(TYPING_KEY, JSON.stringify(typing));
 }
 
-// Stop typing
 function stopTyping() {
   let typing = JSON.parse(localStorage.getItem(TYPING_KEY)) || {};
   delete typing[currentUser];
-  localStorage.setIt
+  localStorage.setItem(TYPING_KEY, JSON.stringify(typing));
+}
+
+function showTyping() {
+  let typing = JSON.parse(localStorage.getItem(TYPING_KEY)) || {};
+  let now = Date.now();
+
+  let active = Object.keys(typing).filter(
+    user => user !== currentUser && now - typing[user] < TYPING_TIMEOUT
+  );
+
+  let text = document.getElementById("typingText");
+  if (active.length === 0) {
+    text.textContent = "";
+  } else if (active.length === 1) {
+    text.textContent = `${active[0]} is typing…`;
+  } else {
+    text.textContent = `${active.length} people are typing…`;
+  }
+}
+
+// Events
+document.getElementById("chatInput").addEventListener("keydown", e => {
+  if (e.key === "Enter") sendMessage();
+  else handleTyping();
+});
+
+document.getElementById("chatInput").addEventListener("blur", stopTyping);
+
+// Auto refresh
+setInterval(() => {
+  loadChat();
+  showTyping();
+}, 500);
+
+// Initial load
+loadChat();
+</script>
+
+</body>
+</html>
