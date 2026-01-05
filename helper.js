@@ -1,7 +1,16 @@
 // helper.js
-function getCurrentUser(){
+
+// Ensure users object always exists
+function initUsers() {
+  if (!localStorage.getItem("users")) {
+    localStorage.setItem("users", JSON.stringify({}));
+  }
+}
+
+// Get currently logged-in username
+function getCurrentUser() {
   let username = localStorage.getItem("currentUser");
-  if(!username){
+  if (!username) {
     alert("You must be logged in!");
     window.location.href = "signin.html";
     return null;
@@ -9,13 +18,16 @@ function getCurrentUser(){
   return username;
 }
 
-function loadUserData(){
+// Load full user object
+function loadUserData() {
+  initUsers();
   let username = getCurrentUser();
-  if(!username) return null;
+  if (!username) return null;
 
-  let users = JSON.parse(localStorage.getItem("users")) || {};
-  if(!users[username]){
-    alert("User data not found!");
+  let users = JSON.parse(localStorage.getItem("users"));
+  if (!users[username]) {
+    alert("User not found. Please sign in again.");
+    localStorage.removeItem("currentUser");
     window.location.href = "signin.html";
     return null;
   }
@@ -23,15 +35,20 @@ function loadUserData(){
   return users[username];
 }
 
-function saveUserData(userData){
+// Save full user object
+function saveUserData(userData) {
+  initUsers();
   let username = getCurrentUser();
-  if(!username) return;
+  if (!username) return;
 
-  let users = JSON.parse(localStorage.getItem("users")) || {};
+  let users = JSON.parse(localStorage.getItem("users"));
   users[username] = userData;
-  localStorage.setItem("users", JSON.stringify(users));
 
-  localStorage.setItem("coins", userData.coins);
-  localStorage.setItem("characters", JSON.stringify(userData.characters));
-  localStorage.setItem("packsOpened", userData.packsOpened);
+  localStorage.setItem("users", JSON.stringify(users));
+}
+
+// Optional logout helper
+function logout() {
+  localStorage.removeItem("currentUser");
+  window.location.href = "signin.html";
 }
