@@ -19,16 +19,14 @@ function loadUserData() {
   initUsers();
   let user = getCurrentUser();
   if (!user) return null;
-
   let users = JSON.parse(localStorage.getItem("users"));
-  return users[user] || null;
+  return users[user];
 }
 
 function saveUserData(data) {
   initUsers();
   let user = getCurrentUser();
   if (!user) return;
-
   let users = JSON.parse(localStorage.getItem("users"));
   users[user] = data;
   localStorage.setItem("users", JSON.stringify(users));
@@ -39,10 +37,9 @@ function logout() {
   window.location.href = "signin.html";
 }
 
-// Shared topbar (USE THIS EVERYWHERE)
 function loadTopbar() {
   document.body.insertAdjacentHTML("afterbegin", `
-    <div class="topbar" style="background:#1f2937;padding:15px;display:flex;justify-content:center;gap:20px;">
+    <div style="background:#1f2937;padding:15px;display:flex;justify-content:center;gap:20px;">
       <a href="index.html">Home</a>
       <a href="stats.html">Stats</a>
       <a href="tests.html">Tests</a>
@@ -51,7 +48,7 @@ function loadTopbar() {
       <a href="announcements.html">Announcements</a>
       <a href="leaderboard.html">Leaderboard</a>
       <a href="admin.html">Admin</a>
+      <a href="#" onclick="logout()">Logout</a>
     </div>
   `);
 }
-
