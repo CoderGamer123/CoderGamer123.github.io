@@ -1,54 +1,57 @@
 // helper.js
 
-// Ensure users object always exists
 function initUsers() {
   if (!localStorage.getItem("users")) {
     localStorage.setItem("users", JSON.stringify({}));
   }
 }
 
-// Get currently logged-in username
 function getCurrentUser() {
-  let username = localStorage.getItem("currentUser");
-  if (!username) {
-    alert("You must be logged in!");
+  let user = localStorage.getItem("currentUser");
+  if (!user) {
     window.location.href = "signin.html";
     return null;
   }
-  return username;
+  return user;
 }
 
-// Load full user object
 function loadUserData() {
   initUsers();
-  let username = getCurrentUser();
-  if (!username) return null;
+  let user = getCurrentUser();
+  if (!user) return null;
 
   let users = JSON.parse(localStorage.getItem("users"));
-  if (!users[username]) {
-    alert("User not found. Please sign in again.");
-    localStorage.removeItem("currentUser");
-    window.location.href = "signin.html";
-    return null;
-  }
-
-  return users[username];
+  return users[user] || null;
 }
 
-// Save full user object
-function saveUserData(userData) {
+function saveUserData(data) {
   initUsers();
-  let username = getCurrentUser();
-  if (!username) return;
+  let user = getCurrentUser();
+  if (!user) return;
 
   let users = JSON.parse(localStorage.getItem("users"));
-  users[username] = userData;
-
+  users[user] = data;
   localStorage.setItem("users", JSON.stringify(users));
 }
 
-// Optional logout helper
 function logout() {
   localStorage.removeItem("currentUser");
   window.location.href = "signin.html";
 }
+
+// Shared topbar (USE THIS EVERYWHERE)
+function loadTopbar() {
+  document.body.insertAdjacentHTML("afterbegin", `
+    <div class="topbar" style="background:#1f2937;padding:15px;display:flex;justify-content:center;gap:20px;">
+      <a href="index.html">Home</a>
+      <a href="stats.html">Stats</a>
+      <a href="tests.html">Tests</a>
+      <a href="shop.html">Shop</a>
+      <a href="chat.html">Chat</a>
+      <a href="announcements.html">Announcements</a>
+      <a href="leaderboard.html">Leaderboard</a>
+      <a href="admin.html">Admin</a>
+    </div>
+  `);
+}
+
