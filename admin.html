@@ -7,17 +7,15 @@
 <body>
 
 <script>
-  const user = requireLogin();
-  loadTopbar();
+const user = requireLogin();
+loadTopbar();
 
-  if (user !== "admin") {
-    document.body.innerHTML += "<h2>Access denied</h2>";
-    throw new Error("Not admin");
-  }
+if (user !== "admin") {
+  document.body.innerHTML += "<h2>Access denied</h2>";
+}
 </script>
 
 <h1>Admin Panel</h1>
 
 </body>
 </html>
-
