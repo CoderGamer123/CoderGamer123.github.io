@@ -2,70 +2,58 @@
 <html>
 <head>
   <title>Testit - Stats</title>
+  <script src="helper.js"></script>
   <style>
     body { margin:0; font-family: Arial; background:#0b1020; color:white; text-align:center; }
     .topbar { background:#1f2937; padding:15px; display:flex; justify-content:center; gap:20px; }
     .topbar a { color:white; text-decoration:none; font-weight:bold; }
     .topbar a:hover { text-decoration:underline; }
-
     .container { padding:30px; }
-    h1 { margin-bottom:20px; }
-    .stat { margin:10px 0; font-size:20px; }
-    .rarity { display:flex; justify-content:center; gap:30px; margin-top:20px; }
-    .rarity div { padding:10px 15px; border-radius:8px; font-weight:bold; }
-    .common { background:#4b5563; }
-    .rare { background:#1e40af; }
-    .chroma { background:#800080; }
+    p { font-size:18px; margin:8px 0; }
   </style>
 </head>
 <body>
-
 <div class="topbar">
   <a href="index.html">Home</a>
   <a href="stats.html">Stats</a>
   <a href="tests.html">Tests</a>
   <a href="shop.html">Shop</a>
   <a href="announcements.html">Announcements</a>
+  <a href="leaderboard.html">Leaderboard</a>
   <a href="admin.html">Admin</a>
 </div>
 
 <div class="container">
-  <h1>📊 Your Stats</h1>
-
-  <div class="stat" id="coinsStat">Coins: 0</div>
-  <div class="stat" id="totalChars">Total Characters: 0</div>
-  <div class="stat" id="packsOpened">Total Packs Opened: 0</div>
-
-  <h2>Rarity Breakdown</h2>
-  <div class="rarity">
-    <div class="common" id="commonCount">Common: 0</div>
-    <div class="rare" id="rareCount">Rare: 0</div>
-    <div class="chroma" id="chromaCount">Chroma: 0</div>
-  </div>
+  <h1>Your Stats</h1>
+  <p id="coinsStat"></p>
+  <p id="packsOpened"></p>
+  <p id="totalChars"></p>
+  <p id="commonCount"></p>
+  <p id="rareCount"></p>
+  <p id="chromaCount"></p>
 </div>
 
 <script>
-  let coins = parseInt(localStorage.getItem("coins")) || 100;
-  let characters = JSON.parse(localStorage.getItem("characters")) || {};
-  let packsOpened = parseInt(localStorage.getItem("packsOpened")) || 0;
+let user = loadUserData();
+let coins = user.coins;
+let characters = user.characters;
+let packsOpened = user.packsOpened;
 
-  // Count totals
-  let totalChars = 0, common=0, rare=0, chroma=0;
-  for(let id in characters){
-    totalChars += characters[id].count;
-    if(characters[id].rarity === "common") common += characters[id].count;
-    else if(characters[id].rarity === "rare") rare += characters[id].count;
-    else if(characters[id].rarity === "chroma") chroma += characters[id].count;
-  }
+let totalChars=0, common=0, rare=0, chroma=0;
+for(let id in characters){
+  totalChars += characters[id].count;
+  if(characters[id].rarity==="common") common += characters[id].count;
+  else if(characters[id].rarity==="rare") rare += characters[id].count;
+  else if(characters[id].rarity==="chroma") chroma += characters[id].count;
+}
 
-  document.getElementById("coinsStat").innerText = "Coins: " + coins;
-  document.getElementById("totalChars").innerText = "Total Characters: " + totalChars;
-  document.getElementById("packsOpened").innerText = "Total Packs Opened: " + packsOpened;
-  document.getElementById("commonCount").innerText = "Common: " + common;
-  document.getElementById("rareCount").innerText = "Rare: " + rare;
-  document.getElementById("chromaCount").innerText = "Chroma: " + chroma;
+document.getElementById("coinsStat").innerText = "Coins: " + coins;
+document.getElementById("packsOpened").innerText = "Total Packs Opened: " + packsOpened;
+document.getElementById("totalChars").innerText = "Total Characters: " + totalChars;
+document.getElementById("commonCount").innerText = "Common: " + common;
+document.getElementById("rareCount").innerText = "Rare: " + rare;
+document.getElementById("chromaCount").innerText = "Chroma: " + chroma;
 </script>
-
 </body>
 </html>
 
