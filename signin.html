@@ -3,13 +3,21 @@
 <head>
   <title>Testit - Sign In</title>
   <script src="helper.js"></script>
+  <style>
+    body { background:#0b1020; color:white; font-family:Arial; text-align:center; }
+    .box { max-width:400px; margin:80px auto; background:#1f2937; padding:30px; border-radius:10px; }
+    input,button { width:100%; padding:10px; margin:10px 0; border-radius:8px; border:none; }
+    button { background:#2563eb; color:white; cursor:pointer; }
+  </style>
 </head>
 <body>
 
-<h1>Sign In</h1>
-<input id="username" placeholder="Username">
-<input id="password" type="password" placeholder="Password">
-<button onclick="signin()">Sign In</button>
+<div class="box">
+  <h1>Sign In</h1>
+  <input id="username" placeholder="Username">
+  <input id="password" type="password">
+  <button onclick="signin()">Sign In</button>
+</div>
 
 <script>
 function signin() {
@@ -29,4 +37,3 @@ function signin() {
 
 </body>
 </html>
-
