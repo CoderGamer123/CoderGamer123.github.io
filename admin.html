@@ -15,6 +15,9 @@
   </style>
 </head>
 <body>
+
+<script>
+document.body.insertAdjacentHTML('afterbegin', `
 <div class="topbar">
   <a href="index.html">Home</a>
   <a href="stats.html">Stats</a>
@@ -24,6 +27,8 @@
   <a href="leaderboard.html">Leaderboard</a>
   <a href="admin.html">Admin</a>
 </div>
+`);
+</script>
 
 <div class="container">
   <h1>Admin Panel</h1>
@@ -39,7 +44,7 @@
 </div>
 
 <script>
-const ADMIN_PASSWORD = "testitadmin"; // Change to whatever you want
+const ADMIN_PASSWORD = "testitadmin"; // Change if you want
 
 function checkPassword(){
   let pass = document.getElementById("adminPass").value;
@@ -61,6 +66,8 @@ function addAnnouncement(){
   document.getElementById("newAnnouncement").value = "";
 }
 </script>
+
 </body>
 </html>
+
 
