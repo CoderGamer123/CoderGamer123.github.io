@@ -1,26 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Testit - Stats</title>
+  <title>Stats</title>
   <script src="helper.js"></script>
 </head>
 <body>
 
 <script>
-getCurrentUser();
+requireLogin();
 loadTopbar();
-let u=loadUserData();
 </script>
 
-<h1 style="text-align:center">Your Stats</h1>
-<p style="text-align:center">Coins: <span id="coins"></span></p>
-<p style="text-align:center">Packs Opened: <span id="packs"></span></p>
-
-<script>
-document.getElementById("coins").textContent=u.coins;
-document.getElementById("packs").textContent=u.packsOpened;
-</script>
+<h1>Your Stats</h1>
 
 </body>
 </html>
-
