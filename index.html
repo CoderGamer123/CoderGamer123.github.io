@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Testit</title>
+  <title>Testit - Home</title>
   <script src="helper.js"></script>
   <style>
     body { margin:0; font-family: Arial; background:#0b1020; color:white; text-align:center; }
@@ -16,6 +16,8 @@
   </style>
 </head>
 <body>
+<script>
+document.body.insertAdjacentHTML('afterbegin', `
 <div class="topbar">
   <a href="index.html">Home</a>
   <a href="stats.html">Stats</a>
@@ -25,6 +27,8 @@
   <a href="leaderboard.html">Leaderboard</a>
   <a href="admin.html">Admin</a>
 </div>
+`);
+</script>
 
 <div class="container">
   <h1>Welcome to Testit!</h1>
