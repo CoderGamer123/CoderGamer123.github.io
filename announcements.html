@@ -2,51 +2,40 @@
 <html>
 <head>
   <title>Testit - Announcements</title>
+  <script src="helper.js"></script>
   <style>
     body { margin:0; font-family: Arial; background:#0b1020; color:white; text-align:center; }
     .topbar { background:#1f2937; padding:15px; display:flex; justify-content:center; gap:20px; }
     .topbar a { color:white; text-decoration:none; font-weight:bold; }
     .topbar a:hover { text-decoration:underline; }
-
-    .container { padding:30px; }
-    h1 { margin-bottom:20px; }
-
-    .announcement { background:#1f2937; padding:15px; margin:10px auto; width:80%; border-radius:12px; box-shadow:0 4px 10px rgba(0,0,0,0.5); }
+    .container { padding:30px; max-width:600px; margin:auto; }
+    .announcement { background:#1f2937; padding:15px; border-radius:12px; margin:10px 0; }
   </style>
 </head>
 <body>
-
 <div class="topbar">
   <a href="index.html">Home</a>
   <a href="stats.html">Stats</a>
   <a href="tests.html">Tests</a>
   <a href="shop.html">Shop</a>
   <a href="announcements.html">Announcements</a>
+  <a href="leaderboard.html">Leaderboard</a>
   <a href="admin.html">Admin</a>
 </div>
 
-<div class="container">
-  <h1>📢 Announcements</h1>
-  <div id="announcements"></div>
-</div>
+<div class="container" id="announcementContainer"></div>
 
 <script>
-  // Load announcements from localStorage or set default
-  let announcements = JSON.parse(localStorage.getItem("announcements")) || [
-    "Welcome to Testit! Open packs to collect characters!",
-    "Rare and Chroma characters are extra special!"
-  ];
-
-  const container = document.getElementById("announcements");
-  container.innerHTML = "";
-
-  announcements.forEach(msg => {
-    const div = document.createElement("div");
-    div.className = "announcement";
-    div.innerText = msg;
-    container.appendChild(div);
-  });
+let announcements = JSON.parse(localStorage.getItem("announcements")) || [];
+const container = document.getElementById("announcementContainer");
+container.innerHTML = "";
+announcements.forEach(a=>{
+  const div = document.createElement("div");
+  div.className="announcement";
+  div.innerText = a;
+  container.appendChild(div);
+});
 </script>
-
 </body>
 </html>
+
